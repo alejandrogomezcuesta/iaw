@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prácticas guiadas con Apache</title>
+<style>
+:root { color-scheme: light; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #1f2937; background: #f3f4f6; }
+body { max-width: 1000px; margin: 0 auto; padding: 2rem 1rem 4rem; line-height: 1.6; }
+main { background: #fff; border: 1px solid #d1d5db; border-radius: 8px; box-shadow: 0 8px 24px rgb(15 23 42 / 8%); padding: clamp(1.25rem, 4vw, 3rem); }
+h1, h2, h3, h4 { color: #111827; line-height: 1.25; }
+h1 { margin-top: 0; }
+h2 { margin-top: 2.5rem; border-bottom: 2px solid #e5e7eb; padding-bottom: .35rem; }
+h3 { margin-top: 1.75rem; color: #075985; }
+#indice { margin: 2rem 0; padding: 1rem 1.25rem; border: 1px solid #bae6fd; border-radius: 6px; background: #f0f9ff; }
+#indice h2 { margin-top: 0; border-bottom: 0; padding-bottom: 0; }
+#indice ol { margin-bottom: 0; columns: 2; }
+#indice a { text-decoration: none; }
+pre { overflow-x: auto; margin: 1rem 0; padding: 1rem; border-radius: 6px; background: #111827; color: #f9fafb; white-space: pre; }
+pre code { display: block; font-family: Consolas, "Liberation Mono", monospace; white-space: pre; line-height: 1.5; }
+:not(pre) > code { padding: .1rem .3rem; border-radius: 4px; background: #e5e7eb; color: #991b1b; font-family: Consolas, "Liberation Mono", monospace; }
+a { color: #0369a1; }
+@media (max-width: 600px) { body { padding: 1rem .5rem 2rem; } main { padding: 1rem; } }
+</style>
+</head>
+<body>
+<main>
+<h1>Prácticas guiadas con Apache</h1>
+<nav id="indice" aria-label="Índice de prácticas">
+<h2>Índice de prácticas</h2>
+<ol>
+<li><a href="#practica-1">Práctica 1. Modificar los puertos HTTP y HTTPS de Apache</a></li>
+<li><a href="#practica-2">Práctica 2. Cambiar el directorio por defecto y mostrar su contenido</a></li>
+<li><a href="#practica-3">Práctica 3. Habilitar y deshabilitar un módulo de Apache</a></li>
+<li><a href="#practica-4">Práctica 4. Configurar DirectoryIndex</a></li>
+<li><a href="#practica-5">Práctica 5. Crear hosts virtuales basados en el dominio</a></li>
+<li><a href="#practica-6">Práctica 6. Crear hosts virtuales basados en el puerto</a></li>
+<li><a href="#practica-7">Práctica 7. Consultar los hosts virtuales activos</a></li>
+<li><a href="#practica-8">Práctica 8. Comprobar la sintaxis y localizar un error</a></li>
+<li><a href="#practica-9">Práctica 9. Ocultar la versión de Apache</a></li>
+<li><a href="#practica-10">Práctica 10. Consultar y aumentar el detalle de los logs</a></li>
+</ol>
+</nav>
+<h2>Objetivo y condiciones de trabajo</h2>
+<p>Estas prácticas convierten los ejercicios del documento <strong>Ejercicios con Apache</strong> en un recorrido guiado basado en los apartados 3.1 a 3.12 del manual <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/"><strong>LAMP Stack en Debian Server</strong></a>.</p>
+<p>Trabaja sobre una máquina virtual Debian Server con Apache instalado. Cada ejercicio parte de una configuración limpia de Apache. Cuando sea posible, crea una instantánea de VirtualBox después de instalar Apache y vuelve a ella antes de comenzar el ejercicio siguiente.</p>
+<p>Todos los comandos se ejecutan en el servidor salvo que se indique <strong>CLIENTE</strong>. Sustituye los valores entre <code>&lt; &gt;</code> por los datos de tu entorno.</p>
+<p>Antes de modificar un fichero de configuración, guarda una copia:</p>
+<pre class="highlight"><code class="language-bash">sudo cp fichero fichero.bak</code></pre>
+<p>En los ficheros de Apache, las líneas que empiezan por <code>#</code> son comentarios. Tras modificar la configuración, comprueba siempre la sintaxis antes de reiniciar:</p>
+<pre class="highlight"><code class="language-bash">sudo apache2ctl configtest</code></pre>
+<p>El resultado correcto es <code>Syntax OK</code>.</p>
+<hr />
+<h2 id="practica-1">Práctica 1. Modificar los puertos HTTP y HTTPS de Apache</h2>
+<p><strong>Referencia del manual:</strong> <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-modificar-el-puerto-por-defecto-de-apache">3.4 Cómo modificar el puerto por defecto de Apache</a>.</p>
+<h3>Objetivo de la práctica 1</h3>
+<p>Cambiar el puerto HTTP de <code>80</code> a <code>8000</code> y el puerto HTTPS de <code>443</code> a <code>8443</code>.</p>
+<h3>Pasos de la práctica 1</h3>
+<ol>
+<li>Comprueba que Apache está instalado y funcionando:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo apt update
+sudo apt install apache2 -y
+sudo systemctl status apache2</code></pre>
+<ol>
+<li>Guarda copias de los ficheros que vas a modificar:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo cp /etc/apache2/ports.conf /etc/apache2/ports.conf.bak
+sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf.bak
+sudo cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf.bak</code></pre>
+<ol>
+<li>Edita <code>/etc/apache2/ports.conf</code>. Cambia la directiva HTTP:</li>
+</ol>
+<pre class="highlight"><code class="language-apache">Listen 8000</code></pre>
+<p>Mantén el bloque <code>IfModule</code> de SSL y cambia dentro de él <code>Listen 443</code> por <code>Listen 8443</code>. Si también aparece un bloque <code>IfModule mod_gnutls.c</code>, asegúrate de que no haya dos directivas <code>Listen 8443</code> activas.</p>
+<ol>
+<li>Edita <code>/etc/apache2/sites-available/000-default.conf</code> y cambia la primera línea del sitio:</li>
+</ol>
+<pre class="highlight"><code class="language-apache">&lt;VirtualHost *:8000&gt;</code></pre>
+<ol>
+<li>Edita <code>/etc/apache2/sites-available/default-ssl.conf</code> y cambia:</li>
+</ol>
+<pre class="highlight"><code class="language-apache">&lt;IfModule mod_ssl.c&gt;
+    &lt;VirtualHost *:8443&gt;</code></pre>
+<ol>
+<li>Activa SSL y el sitio HTTPS:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo a2enmod ssl
+sudo a2ensite default-ssl.conf</code></pre>
+<ol>
+<li>Comprueba la configuración y reinicia Apache:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo apache2ctl configtest
+sudo systemctl restart apache2</code></pre>
+<ol>
+<li>Comprueba los dos puertos desde el servidor:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">curl -I http://127.0.0.1:8000
+curl -k -I https://127.0.0.1:8443
+sudo ss -tlnp | grep apache2</code></pre>
+<p>La orden <code>ss</code> muestra los puertos TCP en los que escucha Apache y el proceso asociado. Sirve para comprobar que está atendiendo en los puertos configurados, como <code>8000</code> y <code>8443</code>.</p>
+<h3>Resultado esperado de la práctica 1</h3>
+<p>Apache responde en <code>http://&lt;IP_SERVIDOR&gt;:8000</code> y <code>https://&lt;IP_SERVIDOR&gt;:8443</code>. La opción <code>-k</code> permite probar el certificado local autofirmado.</p>
+<h3>Recuperación de la práctica 1</h3>
+<p>Restaura las copias, vuelve a dejar <code>Listen 80</code>, <code>Listen 443</code>, <code>&lt;VirtualHost *:80&gt;</code> y <code>&lt;VirtualHost *:443&gt;</code>, deshabilita SSL si lo habilitaste solo para esta práctica y reinicia Apache.</p>
+<hr />
+<h2 id="practica-2">Práctica 2. Cambiar el directorio por defecto y mostrar su contenido</h2>
+<p><strong>Referencia del manual:</strong> <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-modificar-el-directorio-por-defecto-de-apache">3.5, Cómo modificar el directorio por defecto de Apache para Debian</a>.</p>
+<h3>Objetivo de la práctica 2</h3>
+<p>Servir la web desde un directorio distinto de <code>/var/www/html</code> y comprobar el listado de archivos con <code>Options Indexes FollowSymLinks</code>.</p>
+<h3>Pasos de la práctica 2</h3>
+<ol>
+<li>Crea un directorio con dos páginas que no se llamen <code>index.html</code>:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo mkdir -p /home/usuario/misitioweb
+echo "Página uno" | sudo tee /home/usuario/misitioweb/uno.html
+echo "Página dos" | sudo tee /home/usuario/misitioweb/dos.html
+sudo chown -R www-data:www-data /home/usuario/misitioweb
+sudo chmod 755 /home/usuario /home/usuario/misitioweb</code></pre>
+<ol>
+<li>Guarda y edita <code>/etc/apache2/sites-available/000-default.conf</code>:</li>
+</ol>
+<pre class="highlight"><code class="language-apache">&lt;VirtualHost *:80&gt;
+   ServerAdmin webmaster@localhost
+   DocumentRoot /home/usuario/misitioweb
+
+   &lt;Directory /home/usuario/misitioweb&gt;
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+    &lt;/Directory&gt;
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+&lt;/VirtualHost&gt;</code></pre>
+<p>Estas son las funciones de las directivas utilizadas:</p>
+<ul>
+<li><code>&lt;VirtualHost *:80&gt;</code>: define el sitio virtual que atiende las peticiones recibidas en el puerto HTTP 80, en cualquier interfaz de red (<code>*</code>).</li>
+<li><code>ServerAdmin webmaster@localhost</code>: indica la dirección de correo del administrador del sitio. Apache puede mostrarla en algunas páginas de error.</li>
+<li><code>DocumentRoot /home/usuario/misitioweb</code>: establece el directorio raíz desde el que Apache sirve los archivos de esta web.</li>
+<li><code>&lt;Directory /home/usuario/misitioweb&gt;</code>: comienza la configuración de permisos y opciones para ese directorio del sistema.</li>
+<li><code>Options Indexes FollowSymLinks</code>: permite mostrar un listado cuando no hay página de inicio (<code>Indexes</code>) y seguir enlaces simbólicos (<code>FollowSymLinks</code>).</li>
+<li><code>AllowOverride None</code>: impide que los archivos <code>.htaccess</code> modifiquen esta configuración. Las opciones deben definirse en los archivos de configuración de Apache.</li>
+<li><code>Require all granted</code>: permite el acceso a todos los clientes que soliciten contenido de este directorio.</li>
+<li><code>ErrorLog ${APACHE_LOG_DIR}/error.log</code>: indica dónde se guardan los errores de este sitio. <code>${APACHE_LOG_DIR}</code> suele corresponder a <code>/var/log/apache2</code>.</li>
+<li><code>CustomLog ${APACHE_LOG_DIR}/access.log combined</code>: guarda las peticiones recibidas en <code>access.log</code> usando el formato <code>combined</code>, que incluye datos como la IP, la fecha, la URL, el código de respuesta y el navegador.</li>
+<li>
+<p><code>&lt;/Directory&gt;</code> y <code>&lt;/VirtualHost&gt;</code>: cierran, respectivamente, los bloques de configuración del directorio y del sitio virtual.</p>
+</li>
+<li>
+<p>Comprueba y aplica los cambios:</p>
+</li>
+</ul>
+<pre class="highlight"><code class="language-bash">sudo apache2ctl configtest
+sudo systemctl restart apache2</code></pre>
+<ol>
+<li>Abre <code>http://&lt;IP_SERVIDOR&gt;/</code> o compruébalo con:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">curl http://127.0.0.1/</code></pre>
+<h3>Resultado esperado de la práctica 2</h3>
+<p>Apache muestra un listado del directorio con <code>uno.html</code> y <code>dos.html</code>, porque no existe un archivo <code>index.html</code> y se ha habilitado <code>Indexes</code>.</p>
+<h3>Recuperación de la práctica 2</h3>
+<p>Restaura <code>/etc/apache2/sites-available/000-default.conf</code> y reinicia Apache.</p>
+<hr />
+<h2 id="practica-3">Práctica 3. Habilitar y deshabilitar un módulo de Apache</h2>
+<p><strong>Referencia del manual:</strong> <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-habilitardeshabilitar-un-m%C3%B3dulo-de-apache">3.6, Cómo habilitar/deshabilitar un módulo de Apache</a>.</p>
+<h3>Objetivo de la práctica 3</h3>
+<p>Habilitar y deshabilitar el módulo <code>rewrite</code> y verificar su estado.</p>
+<h3>Pasos de la práctica 3</h3>
+<ol>
+<li>Comprueba si el módulo está cargado:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">apache2ctl -M | grep rewrite</code></pre>
+<ol>
+<li>Habilítalo y reinicia Apache:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo a2enmod rewrite
+sudo systemctl restart apache2
+apache2ctl -M | grep rewrite</code></pre>
+<p>Hasta este momento solo se ha cargado el módulo. Para comprobar qué permite hacer, crea una página de destino:</p>
+<pre class="highlight"><code class="language-bash">echo "Has llegado a la página nueva" | sudo tee /var/www/html/despues.html</code></pre>
+<p>Edita <code>/etc/apache2/sites-available/000-default.conf</code> y añade estas líneas dentro del bloque <code>&lt;VirtualHost *:80&gt;</code>:</p>
+<pre class="highlight"><code class="language-apache">RewriteEngine On
+RewriteRule ^/antes$ /despues.html [R=302,L]</code></pre>
+<p>Comprueba la configuración y reinicia Apache:</p>
+<pre class="highlight"><code class="language-bash">sudo apache2ctl configtest
+sudo systemctl restart apache2</code></pre>
+<p>Prueba una dirección que no existe, pero que ahora será redirigida:</p>
+<pre class="highlight"><code class="language-bash">curl -I http://127.0.0.1/antes</code></pre>
+<p>La respuesta debe incluir <code>HTTP/1.1 302 Found</code> y una cabecera <code>Location: /despues.html</code>. Sin <code>mod_rewrite</code>, la regla no se puede interpretar y Apache no puede aplicar esta redirección.</p>
+<ol>
+<li>Elimina las dos líneas <code>RewriteEngine</code> y <code>RewriteRule</code> del sitio virtual, comprueba que la configuración sigue siendo válida y deshabilita el módulo:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo apache2ctl configtest
+sudo a2dismod rewrite
+sudo systemctl restart apache2
+apache2ctl -M | grep rewrite || true</code></pre>
+<h3>Resultado esperado de la práctica 3</h3>
+<p>Después de <code>a2enmod</code> aparece <code>rewrite_module (shared)</code>. Con la regla configurada, una petición a <code>/antes</code> devuelve una redirección <code>302</code> hacia <code>/despues.html</code>. Después de eliminar la regla y ejecutar <code>a2dismod</code>, el módulo deja de aparecer.</p>
+<h3>Recuperación de la práctica 3</h3>
+<p>Deja el módulo en el estado indicado por el profesor. Si no se indica ninguno, vuelve a habilitarlo y comprueba que Apache sigue funcionando. Puedes eliminar la página de prueba con <code>sudo rm /var/www/html/despues.html</code>.</p>
+<hr />
+<h2 id="practica-4">Práctica 4. Configurar <code>DirectoryIndex</code></h2>
+<p><strong>Referencia del manual:</strong> <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-configurar-la-directiva-directoryindex">3.7, Cómo configurar la directiva DirectoryIndex</a>.</p>
+<h3>Objetivo de la práctica 4</h3>
+<p>Crear <code>index.html</code> e <code>index.php</code> y controlar cuál se carga primero cuando se visita el directorio sin indicar un archivo.</p>
+<h3>Pasos de la práctica 4</h3>
+<ol>
+<li>Instala PHP si no está instalado y crea los dos archivos:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo apt install php libapache2-mod-php -y
+sudo mkdir -p /var/www/html/práctica4
+echo "Contenido HTML" | sudo tee /var/www/html/práctica4/index.html
+printf '%s\n' '&lt;?php echo "Contenido PHP"; ?&gt;' | sudo tee /var/www/html/práctica4/index.php</code></pre>
+<ol>
+<li>Edita <code>/etc/apache2/mods-available/dir.conf</code> y coloca primero <code>index.php</code>:</li>
+</ol>
+<pre class="highlight"><code class="language-apache">DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm</code></pre>
+<ol>
+<li>Comprueba y reinicia:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo apache2ctl configtest
+sudo systemctl restart apache2</code></pre>
+<ol>
+<li>
+<p>Visita <code>http://&lt;IP_SERVIDOR&gt;/práctica4/</code> y observa el contenido.</p>
+</li>
+<li>
+<p>Intercambia el orden:</p>
+</li>
+</ol>
+<pre class="highlight"><code class="language-apache">DirectoryIndex index.html index.php index.cgi index.pl index.xhtml index.htm</code></pre>
+<p>Comprueba de nuevo:</p>
+<pre class="highlight"><code class="language-bash">sudo apache2ctl configtest
+sudo systemctl restart apache2</code></pre>
+<h3>Resultado esperado de la práctica 4</h3>
+<p>Cuando <code>index.php</code> aparece primero, se muestra <code>Contenido PHP</code>. Cuando <code>index.html</code> aparece primero, se muestra <code>Contenido HTML</code>.</p>
+<h3>Recuperación de la práctica 4</h3>
+<p>Restaura el orden original de <code>DirectoryIndex</code> y elimina <code>/var/www/html/práctica4</code> si ya no lo necesitas.</p>
+<hr />
+<h2 id="practica-5">Práctica 5. Crear hosts virtuales basados en el dominio</h2>
+<p><strong>Referencia del manual:</strong> <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-crear-un-nuevo-host-virtual">3.8, Cómo crear un nuevo host virtual</a> y <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#host-virtual-basado-en-el-nombre-de-dominio">3.8.1, Host virtual basado en el nombre de dominio</a>.</p>
+<h3>Objetivo de la práctica 5</h3>
+<p>Configurar dos sitios en el mismo Apache y diferenciarlos por el nombre de dominio.</p>
+<h3>Pasos de la práctica 5</h3>
+<ol>
+<li>Crea los directorios y las páginas de prueba:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo mkdir -p /var/www/html/web1 /var/www/html/web2
+echo "Sitio web 1" | sudo tee /var/www/html/web1/index.html
+echo "Sitio web 2" | sudo tee /var/www/html/web2/index.html
+sudo chown -R www-data:www-data /var/www/html/web1 /var/www/html/web2</code></pre>
+<ol>
+<li>Crea <code>/etc/apache2/sites-available/web1.conf</code>:</li>
+</ol>
+<pre class="highlight"><code class="language-apache">&lt;VirtualHost *:80&gt;
+    ServerName web1.com
+    ServerAdmin webmaster@web1.com
+    DocumentRoot /var/www/html/web1
+    ErrorLog ${APACHE_LOG_DIR}/web1-error.log
+    CustomLog ${APACHE_LOG_DIR}/web1-access.log combined
+&lt;/VirtualHost&gt;</code></pre>
+<ol>
+<li>Crea <code>/etc/apache2/sites-available/web2.conf</code> cambiando el dominio y el directorio:</li>
+</ol>
+<pre class="highlight"><code class="language-apache">&lt;VirtualHost *:80&gt;
+    ServerName web2.com
+    ServerAdmin webmaster@web2.com
+    DocumentRoot /var/www/html/web2
+    ErrorLog ${APACHE_LOG_DIR}/web2-error.log
+    CustomLog ${APACHE_LOG_DIR}/web2-access.log combined
+&lt;/VirtualHost&gt;</code></pre>
+<ol>
+<li>Habilita los sitios, deshabilita el sitio por defecto y recarga Apache:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo a2dissite 000-default.conf
+sudo a2ensite web1.conf web2.conf
+sudo apache2ctl configtest
+sudo systemctl reload apache2</code></pre>
+<ol>
+<li>En el <strong>CLIENTE</strong>, añade al archivo <code>/etc/hosts</code> estas líneas, usando la IP del servidor:</li>
+</ol>
+<pre class="highlight"><code class="language-text">&lt;IP_SERVIDOR&gt; web1.com
+&lt;IP_SERVIDOR&gt; web2.com</code></pre>
+<ol>
+<li>Prueba ambos sitios:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">curl http://web1.com/
+curl http://web2.com/</code></pre>
+<h3>Resultado esperado de la práctica 5</h3>
+<p><code>web1.com</code> devuelve <code>Sitio web 1</code> y <code>web2.com</code> devuelve <code>Sitio web 2</code>, aunque ambos nombres resuelvan hacia la misma IP.</p>
+<h3>Recuperación de la práctica 5</h3>
+<p>Deshabilita <code>web1.conf</code> y <code>web2.conf</code>, vuelve a habilitar <code>000-default.conf</code>, recarga Apache y elimina las entradas de <code>/etc/hosts</code> del cliente.</p>
+<hr />
+<h2 id="practica-6">Práctica 6. Crear hosts virtuales basados en el puerto</h2>
+<p><strong>Referencia del manual:</strong> <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-crear-un-nuevo-host-virtual">3.8, Cómo crear un nuevo host virtual</a> y <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#host-virtual-basado-en-el-puerto">3.8.2, Host virtual basado en el puerto</a>.</p>
+<h3>Objetivo de la práctica 6</h3>
+<p>Servir dos sitios distintos usando dos puertos diferentes.</p>
+<h3>Pasos de la práctica 6</h3>
+<ol>
+<li>Crea los directorios y páginas:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo mkdir -p /var/www/html/web-port-8000 /var/www/html/web-port-8001
+echo "Sitio del puerto 8000" | sudo tee /var/www/html/web-port-8000/index.html
+echo "Sitio del puerto 8001" | sudo tee /var/www/html/web-port-8001/index.html
+sudo chown -R www-data:www-data /var/www/html/web-port-8000 /var/www/html/web-port-8001</code></pre>
+<ol>
+<li>Añade estas líneas al final de <code>/etc/apache2/ports.conf</code>:</li>
+</ol>
+<pre class="highlight"><code class="language-apache">Listen 8000
+Listen 8001</code></pre>
+<ol>
+<li>Crea <code>/etc/apache2/sites-available/puerto-8000.conf</code>:</li>
+</ol>
+<pre class="highlight"><code class="language-apache">&lt;VirtualHost *:8000&gt;
+    DocumentRoot /var/www/html/web-port-8000
+    &lt;Directory /var/www/html/web-port-8000&gt;
+        Require all granted
+    &lt;/Directory&gt;
+    ErrorLog ${APACHE_LOG_DIR}/puerto-8000-error.log
+    CustomLog ${APACHE_LOG_DIR}/puerto-8000-access.log combined
+&lt;/VirtualHost&gt;</code></pre>
+<ol>
+<li>
+<p>Crea <code>/etc/apache2/sites-available/puerto-8001.conf</code> usando el puerto <code>8001</code> y el directorio <code>/var/www/html/web-port-8001</code>.</p>
+</li>
+<li>
+<p>Habilita los sitios y aplica la configuración:</p>
+</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo a2ensite puerto-8000.conf puerto-8001.conf
+sudo apache2ctl configtest
+sudo systemctl reload apache2</code></pre>
+<ol>
+<li>Comprueba los dos sitios:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">curl http://127.0.0.1:8000/
+curl http://127.0.0.1:8001/</code></pre>
+<h3>Resultado esperado de la práctica 6</h3>
+<p>El puerto <code>8000</code> devuelve <code>Sitio del puerto 8000</code> y el puerto <code>8001</code> devuelve <code>Sitio del puerto 8001</code>.</p>
+<h3>Recuperación de la práctica 6</h3>
+<p>Deshabilita ambos sitios, elimina las líneas <code>Listen 8000</code> y <code>Listen 8001</code> y recarga Apache.</p>
+<hr />
+<h2 id="practica-7">Práctica 7. Consultar los hosts virtuales activos</h2>
+<p><strong>Referencia del manual:</strong> <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-consultar-los-hosts-virtuales-activos">3.9, Cómo consultar los hosts virtuales activos</a>.</p>
+<h3>Objetivo de la práctica 7</h3>
+<p>Distinguir los sitios configurados de los sitios realmente habilitados.</p>
+<h3>Pasos de la práctica 7</h3>
+<ol>
+<li>Lista los ficheros de sitios disponibles:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">ls -l /etc/apache2/sites-available/</code></pre>
+<ol>
+<li>Lista los sitios habilitados mediante enlaces simbólicos:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">ls -l /etc/apache2/sites-enabled/</code></pre>
+<ol>
+<li>Consulta cómo Apache interpreta los hosts virtuales:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo apache2ctl -S</code></pre>
+<ol>
+<li>Anota para cada sitio su puerto, <code>ServerName</code>, <code>DocumentRoot</code> y fichero de configuración.</li>
+</ol>
+<h3>Resultado esperado de la práctica 7</h3>
+<p><code>sites-available</code> puede contener sitios que no están activos. Solo los que aparecen enlazados en <code>sites-enabled</code> participan en la configuración cargada por Apache. <code>apache2ctl -S</code> muestra los hosts virtuales activos y el sitio predeterminado de cada puerto.</p>
+<h3>Entrega de la práctica 7</h3>
+<p>Incluye en tus apuntes la salida de <code>apache2ctl -S</code> y explica por qué un sitio disponible pero no habilitado no recibe peticiones.</p>
+<hr />
+<h2 id="practica-8">Práctica 8. Comprobar la sintaxis y localizar un error</h2>
+<p><strong>Referencia del manual:</strong> <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-comprobar-la-sintaxis-de-los-archivos-de-configuraci%C3%B3n-de-apache">3.10, Cómo comprobar la sintaxis de los archivos de configuración de Apache</a>.</p>
+<h3>Objetivo de la práctica 8</h3>
+<p>Provocar un error controlado, localizarlo con <code>configtest</code> y corregirlo sin dejar Apache inutilizado.</p>
+<h3>Pasos de la práctica 8</h3>
+<ol>
+<li>Ejecuta la comprobación con la configuración correcta:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo apache2ctl configtest</code></pre>
+<ol>
+<li>Haz una copia y edita un fichero de sitio habilitado, por ejemplo:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo cp /etc/apache2/sites-available/000-default.conf /tmp/000-default.conf.práctica8
+sudo nano /etc/apache2/sites-available/000-default.conf</code></pre>
+<ol>
+<li>Introduce un error sencillo y controlado, como cambiar:</li>
+</ol>
+<pre class="highlight"><code class="language-apache">&lt;VirtualHost *:80&gt;</code></pre>
+<p>por:</p>
+<pre class="highlight"><code class="language-apache">&lt;VirtualHost *:80</code></pre>
+<ol>
+<li>Ejecuta la comprobación sin reiniciar Apache:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo apache2ctl configtest</code></pre>
+<p>Guarda el mensaje de error y la línea indicada.</p>
+<ol>
+<li>Corrige el fichero, vuelve a ejecutar <code>configtest</code> y solo cuando aparezca <code>Syntax OK</code>, recarga Apache:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo apache2ctl configtest
+sudo systemctl reload apache2</code></pre>
+<h3>Resultado esperado de la práctica 8</h3>
+<p>Mientras existe el error, <code>configtest</code> informa de un error de sintaxis. Tras corregirlo, muestra <code>Syntax OK</code>. Un error de sintaxis no debe aplicarse reiniciando el servicio.</p>
+<h3>Recuperación de la práctica 8</h3>
+<p>Si no localizas el cambio, restaura <code>/tmp/000-default.conf.práctica8</code> y ejecuta de nuevo <code>configtest</code>.</p>
+<hr />
+<h2 id="practica-9">Práctica 9. Ocultar la versión de Apache</h2>
+<p><strong>Referencia del manual:</strong> <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-ocultar-la-versi%C3%B3n-de-apache-al-cliente">3.11, Cómo ocultar la versión de Apache al cliente</a>.</p>
+<h3>Objetivo de la práctica 9</h3>
+<p>Reducir la información del servidor expuesta en las respuestas HTTP.</p>
+<h3>Pasos de la práctica 9</h3>
+<ol>
+<li>Guarda una copia del fichero global de seguridad:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo cp /etc/apache2/conf-available/security.conf /etc/apache2/conf-available/security.conf.bak</code></pre>
+<ol>
+<li>Edita <code>/etc/apache2/conf-available/security.conf</code> y deja activas estas directivas:</li>
+</ol>
+<pre class="highlight"><code class="language-apache">ServerTokens Prod
+ServerSignature Off</code></pre>
+<p><code>ServerTokens</code> es una directiva global. <code>ServerSignature</code> también puede configurarse para un host virtual.</p>
+<ol>
+<li>Comprueba y recarga Apache:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo apache2ctl configtest
+sudo systemctl reload apache2</code></pre>
+<ol>
+<li>Consulta las cabeceras que recibe el cliente:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">curl -I http://127.0.0.1/
+curl -Iv http://127.0.0.1/ 2&gt;&amp;1 | grep -i server</code></pre>
+<h3>Resultado esperado de la práctica 9</h3>
+<p>La cabecera <code>Server</code> no debe mostrar la versión concreta de Apache, por ejemplo <code>Apache/2.4.x</code>. Las páginas de error tampoco deben mostrar la firma completa del servidor.</p>
+<h3>Recuperación de la práctica 9</h3>
+<p>Restaura <code>security.conf.bak</code>, comprueba la sintaxis y recarga Apache.</p>
+<hr />
+<h2 id="practica-10">Práctica 10. Consultar y aumentar el detalle de los logs</h2>
+<p><strong>Referencia del manual:</strong> <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#archivos-de-log-de-apache">3.12, Archivos de log de Apache</a> y sus apartados 3.12.1, 3.12.2 y 3.12.3.</p>
+<h3>Objetivo de la práctica 10</h3>
+<p>Localizar los logs, observar accesos correctos y errores 404, y cambiar temporalmente el nivel de detalle.</p>
+<h3>Pasos de la práctica 10</h3>
+<ol>
+<li>Identifica los ficheros de log:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo ls -l /var/log/apache2/
+sudo tail -n 10 /var/log/apache2/access.log
+sudo tail -n 10 /var/log/apache2/error.log</code></pre>
+<ol>
+<li>En una terminal del servidor, observa el registro de accesos en tiempo real:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo tail -f /var/log/apache2/access.log</code></pre>
+<ol>
+<li>En otra terminal, solicita una página existente y otra inexistente:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">curl -I http://127.0.0.1/
+curl -I http://127.0.0.1/pagina-que-no-existe.html</code></pre>
+<p>Vuelve a la terminal de <code>tail</code> y anota los códigos <code>200</code> y <code>404</code>. Pulsa <code>Ctrl+C</code> para detener el seguimiento.</p>
+<ol>
+<li>Guarda una copia de <code>/etc/apache2/apache2.conf</code> y cambia temporalmente el nivel de log:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf.bak
+sudo nano /etc/apache2/apache2.conf</code></pre>
+<p>Busca <code>LogLevel</code> o añade al final:</p>
+<pre class="highlight"><code class="language-apache">LogLevel debug</code></pre>
+<ol>
+<li>Comprueba y recarga Apache:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo apache2ctl configtest
+sudo systemctl reload apache2</code></pre>
+<ol>
+<li>Repite varias peticiones, consulta el log de errores y compara el detalle:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">curl -I http://127.0.0.1/
+curl -I http://127.0.0.1/pagina-que-no-existe.html
+sudo tail -n 30 /var/log/apache2/error.log</code></pre>
+<ol>
+<li>Restaura el nivel normal, que en el manual aparece como <code>warn</code>:</li>
+</ol>
+<pre class="highlight"><code class="language-bash">sudo cp /etc/apache2/apache2.conf.bak /etc/apache2/apache2.conf
+sudo apache2ctl configtest
+sudo systemctl reload apache2</code></pre>
+<h3>Resultado esperado de la práctica 10</h3>
+<p><code>access.log</code> registra las peticiones recibidas, incluidas las respuestas <code>200</code> y <code>404</code>. <code>error.log</code> registra los errores del servidor. Con <code>LogLevel debug</code> se obtiene mucho más detalle que con <code>warn</code>.</p>
+<h3>Precaución de la práctica 10</h3>
+<p>No mantengas <code>LogLevel debug</code> en un servidor de producción: genera mucho volumen de información y puede dificultar la lectura de los problemas reales.</p>
+<h3>Entrega de la práctica 10</h3>
+<p>Incluye un fragmento de cada log y explica que peticion produjo cada linea.</p>
+<hr />
+<h2>Entrega final</h2>
+<p>Crea un fichero Markdown con una sección para cada práctica. En cada sección incluye:</p>
+<ul>
+<li>comandos ejecutados;</li>
+<li>ficheros de configuración modificados;</li>
+<li>capturas o salidas que demuestren el resultado;</li>
+<li>errores encontrados y su solución;</li>
+<li>forma de restaurar el estado inicial.</li>
+</ul>
+</main>
+</body>
+</html>
