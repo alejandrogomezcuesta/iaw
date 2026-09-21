@@ -24,6 +24,32 @@ El resultado correcto es `Syntax OK`.
 
 ---
 
+## Práctica 0. Instalar Apache
+
+**Referencia del manual:** [3.1 Instalación de Apache](https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#instalaci%C3%B3n-de-apache).
+
+Para instalar Apache en Ubuntu Server, ejecuta:
+
+```bash
+sudo apt install apache2 -y
+```
+
+Para instalar PHP en modo FPM y permitir la conexión con MariaDB/MySQL, ejecuta:
+
+```bash
+sudo apt install php-fpm php-mysql -y
+sudo a2enmod proxy_fcgi setenvif
+```
+
+Activa la configuración de PHP-FPM. Sustituye `php8.4-fpm` por la versión instalada en tu sistema si fuera diferente. Puedes consultar las configuraciones disponibles con `ls /etc/apache2/conf-available/`:
+
+```bash
+sudo a2enconf php8.4-fpm
+sudo systemctl restart apache2
+```
+
+---
+
 ## Práctica 1. Modificar los puertos HTTP y HTTPS de Apache
 
 **Referencia del manual:** [3.4 Cómo modificar el puerto por defecto de Apache](https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-modificar-el-puerto-por-defecto-de-apache).
@@ -260,10 +286,9 @@ Crear `index.html` e `index.php` y controlar cuál se carga primero cuando se vi
 
 ### Pasos de la práctica 4
 
-1. Instala PHP si no está instalado y crea los dos archivos:
+1. Crea los dos archivos:
 
    ```bash
-   sudo apt install php libapache2-mod-php -y
    sudo mkdir -p /var/www/html/práctica4
    echo "Contenido HTML" | sudo tee /var/www/html/práctica4/index.html
    printf '%s\n' '<?php echo "Contenido PHP"; ?>' | sudo tee /var/www/html/práctica4/index.php

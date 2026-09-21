@@ -29,6 +29,7 @@ a { color: #0369a1; }
 <nav id="indice" aria-label="Índice de prácticas">
 <h2>Índice de prácticas</h2>
 <ol>
+<li><a href="#practica-0">Práctica 0. Instalar Apache</a></li>
 <li><a href="#practica-1">Práctica 1. Modificar los puertos HTTP y HTTPS de Apache</a></li>
 <li><a href="#practica-2">Práctica 2. Cambiar el directorio por defecto y mostrar su contenido</a></li>
 <li><a href="#practica-3">Práctica 3. Habilitar y deshabilitar un módulo de Apache</a></li>
@@ -50,6 +51,17 @@ a { color: #0369a1; }
 <p>En los ficheros de Apache, las líneas que empiezan por <code>#</code> son comentarios. Tras modificar la configuración, comprueba siempre la sintaxis antes de reiniciar:</p>
 <pre class="highlight"><code class="language-bash">sudo apache2ctl configtest</code></pre>
 <p>El resultado correcto es <code>Syntax OK</code>.</p>
+<hr />
+<h2 id="practica-0">Práctica 0. Instalar Apache</h2>
+<p><strong>Referencia del manual:</strong> <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#instalaci%C3%B3n-de-apache">3.1 Instalación de Apache</a>.</p>
+<p>Para instalar Apache en Ubuntu Server, ejecuta:</p>
+<pre class="highlight"><code class="language-bash">sudo apt install apache2 -y</code></pre>
+<p>Para instalar PHP en modo FPM y permitir la conexión con MariaDB/MySQL, ejecuta:</p>
+<pre class="highlight"><code class="language-bash">sudo apt install php-fpm php-mysql -y
+sudo a2enmod proxy_fcgi setenvif</code></pre>
+<p>Activa la configuración de PHP-FPM. Sustituye <code>php8.4-fpm</code> por la versión instalada en tu sistema si fuera diferente. Puedes consultar las configuraciones disponibles con <code>ls /etc/apache2/conf-available/</code>:</p>
+<pre class="highlight"><code class="language-bash">sudo a2enconf php8.4-fpm
+sudo systemctl restart apache2</code></pre>
 <hr />
 <h2 id="practica-1">Práctica 1. Modificar los puertos HTTP y HTTPS de Apache</h2>
 <p><strong>Referencia del manual:</strong> <a href="https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-modificar-el-puerto-por-defecto-de-apache">3.4 Cómo modificar el puerto por defecto de Apache</a>.</p>
@@ -206,10 +218,9 @@ apache2ctl -M | grep rewrite || true</code></pre>
 <p>Crear <code>index.html</code> e <code>index.php</code> y controlar cuál se carga primero cuando se visita el directorio sin indicar un archivo.</p>
 <h3>Pasos de la práctica 4</h3>
 <ol>
-<li>Instala PHP si no está instalado y crea los dos archivos:</li>
+<li>Crea los dos archivos:</li>
 </ol>
-<pre class="highlight"><code class="language-bash">sudo apt install php libapache2-mod-php -y
-sudo mkdir -p /var/www/html/práctica4
+<pre class="highlight"><code class="language-bash">sudo mkdir -p /var/www/html/práctica4
 echo "Contenido HTML" | sudo tee /var/www/html/práctica4/index.html
 printf '%s\n' '&lt;?php echo "Contenido PHP"; ?&gt;' | sudo tee /var/www/html/práctica4/index.php</code></pre>
 <ol>
