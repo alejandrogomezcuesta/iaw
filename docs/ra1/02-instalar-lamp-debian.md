@@ -68,11 +68,11 @@ Con la MV apagada:
 ssh usuario@127.0.0.1 -p 2222
 ```
 
-- `ssh`: el comando para iniciar la conexión.
-- `usuario@127.0.0.1`: conecta como el usuario indicado al localhost (nuestro propio equipo).
-- `-p 2222`: especifica que la conexión debe hacerse a través del puerto 2222 de nuestro anfitrión. VirtualBox redirigirá este tráfico al puerto 22 de la MV.
+   - `ssh`: el comando para iniciar la conexión.
+   - `usuario@127.0.0.1`: conecta como el usuario indicado al localhost (nuestro propio equipo).
+   - `-p 2222`: especifica que la conexión debe hacerse a través del puerto 2222 de nuestro anfitrión. VirtualBox redirigirá este tráfico al puerto 22 de la MV.
 
-4. La primera vez te preguntará si confías en la huella digital del servidor. Escribe `yes`.
+4. La primera vez te preguntará si confía en la huella digital del servidor. Escribe `yes`.
 5. Introduce la contraseña de tu usuario en la MV. ¡Ya estás dentro! A partir de ahora, realizaremos toda la configuración a través de esta terminal SSH.
 
 ---
@@ -150,7 +150,7 @@ Con esto, nuestra base de datos es mucho más segura.
 
 ## 6. Instalación de PHP en modo FPM
 
-PHP (Hypertext Preprocessor) es el lenguaje de programación del lado del servidor que usaremos. FPM (FastCGI Process Manager) es una implementación avanzada de FastCGI que ofrece un mejor rendimiento que el módulo tradicional de Apache `mod_php`.
+PHP _Hypertext Preprocessor_ es el lenguaje de programación del lado del servidor que usaremos. FPM (FastCGI Process Manager) es una implementación avanzada de FastCGI que ofrece un mejor rendimiento que el módulo tradicional de Apache `mod_php`.
 
 ### 6.1 Instalación de PHP-FPM y módulos comunes
 
