@@ -1,4 +1,6 @@
-# 1. Introducción a Apache HTTP Server
+# Resumen de Apache
+
+## 1. Introducción a Apache HTTP Server
 
 Apache HTTP Server, conocido habitualmente como Apache, es un servidor web de código abierto. Recibe peticiones HTTP de los clientes, busca el contenido solicitado y devuelve una respuesta. En Debian y Ubuntu, el contenido web predeterminado se encuentra en `/var/www/html` y el servicio se llama `apache2`.
 
