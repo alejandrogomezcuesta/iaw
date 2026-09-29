@@ -693,8 +693,16 @@ Provocar un error controlado, localizarlo con `configtest` y corregirlo sin deja
 
 Mientras existe el error, `configtest` informa de un error de sintaxis. Tras corregirlo, muestra `Syntax OK`. Un error de sintaxis no debe aplicarse reiniciando el servicio.
 
-###
+### Captura de pantalla de la práctica 8
 
+La captura de pantalla corresponde al resultado de la ejecución de las órdenes del último paso de esta práctica.
+
+   ```bash
+   # Comprueba que el error se ha corregido.
+   sudo apache2ctl configtest
+   # Recarga Apache solo después de obtener Syntax OK.
+   sudo systemctl reload apache2
+   ```
 ---
 
 ## Práctica 9. Ocultar la versión de Apache
