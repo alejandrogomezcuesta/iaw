@@ -164,7 +164,7 @@ En esta práctica vamos a cambiar el directorio por defecto que tiene los ficher
 
 2. Edita `/etc/apache2/sites-available/000-default.conf`:
 
-   ```apache
+   ```apacheconf
    # Define el sitio virtual HTTP que atiende en el puerto 80.
    <VirtualHost *:80>
         # Indica el contacto administrativo del sitio.
