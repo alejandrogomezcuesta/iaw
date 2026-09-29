@@ -126,9 +126,14 @@ Apache responde en `http://<IP_SERVIDOR>:8000` y `https://<IP_SERVIDOR>:8443`. L
 Envía una captura de pantalla de la ejecución del último bloque de órdenes de los pasos de esta práctica para comprobar que realmente has cambiado los puertos y habilitado la seguridad.
 
 !!! warning "¡¡NO TE OLVIDES!!"
-    **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
+    **Recuerda volver a la instancia original.**
 
-    Si no haces eso, la práctica siguiente entrará en conflicto con la configuración hecha en esta práctica.
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
+
 ---
 
 ## Práctica 2. Cambiar el directorio por defecto y mostrar su contenido
@@ -212,9 +217,13 @@ Apache muestra un listado del directorio con `uno.html` y `dos.html`, porque no 
 Envía una captura donde aparezca tu navegador web visualizando los dos ficheros `uno.html` y `dos.html`.
 
 !!! warning "¡¡NO TE OLVIDES!!"
-   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
-   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+    **Recuerda volver a la instancia original.**
 
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -309,9 +318,13 @@ La captura de pantalla será ejecutar la siguiente orden y que se vea que `Locat
    ```
 
 !!! warning "¡¡NO TE OLVIDES!!"
-   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
-   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+    **Recuerda volver a la instancia original.**
 
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -386,8 +399,13 @@ Cuando `index.php` aparece primero, se muestra `Contenido PHP`. Cuando `index.ht
 Deja `index.php` primero en la directiva `DirectoryIndex` y envía una captura del navegador al entrar en `http://<IP_SERVIDOR>/práctica4/` sin indicar el nombre de ningún archivo. En la captura debe verse `Contenido PHP`, que confirma que Apache carga `index.php` antes que `index.html`.
 
 !!! warning "¡¡NO TE OLVIDES!!"
-   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
-   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -500,8 +518,13 @@ Envía el resultado de la ejecución de estas órdenes:
    curl http://web2.com/
    ```
 !!! warning "¡¡NO TE OLVIDES!!"
-   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
-   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -597,8 +620,13 @@ Envía el resultado de la ejecución de estas órdenes:
    ```
 
 !!! warning "¡¡NO TE OLVIDES!!"
-   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
-   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -649,8 +677,13 @@ Incluye la salida de `apache2ctl -S`. Piensa  por qué un sitio disponible pero 
    ```
 
 !!! warning "¡¡NO TE OLVIDES!!"
-   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
-   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -726,8 +759,13 @@ La captura de pantalla corresponde al resultado de la ejecución de las órdenes
    ```
 
 !!! warning "¡¡NO TE OLVIDES!!"
-   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
-   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -785,9 +823,13 @@ Captura de pantalla de las últimas órdenes ejecutadas:
    curl -Iv http://127.0.0.1/ 2>&1 | grep -i server
    ```
 !!! warning "¡¡NO TE OLVIDES!!"
-   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
-   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+    **Recuerda volver a la instancia original.**
 
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -877,6 +919,12 @@ No mantengas `LogLevel debug` en un servidor de producción: genera mucho volume
 Envía una captura de pantalla donde se vean los logs con el nivel `LogLevel debug`.
 
 !!! warning "¡¡NO TE OLVIDES!!"
-   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
