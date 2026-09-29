@@ -127,8 +127,8 @@ Envía una captura de pantalla de la ejecución del último bloque de órdenes d
 
 !!! warning "¡¡NO TE OLVIDES!!"
     **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
-    Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
 
+    Si no haces eso, la práctica siguiente entrará en conflicto con la configuración hecha en esta práctica.
 ---
 
 ## Práctica 2. Cambiar el directorio por defecto y mostrar su contenido
