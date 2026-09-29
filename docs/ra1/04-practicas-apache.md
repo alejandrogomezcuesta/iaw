@@ -242,7 +242,7 @@ Habilitar `mod_rewrite` y configurar una regla para que las peticiones a `antes.
    # Reinicia Apache para cargar el módulo.
    sudo systemctl restart apache2
    # Comprueba que mod_rewrite figura entre los módulos cargados.
-   apache2ctl -M | grep rewrite
+   sudo apache2ctl -M | grep rewrite
    ```
 
    `mod_rewrite` permite que Apache examine y transforme las URL mediante reglas. Según las opciones de cada regla, puede cambiar internamente el recurso solicitado o enviar al navegador una redirección HTTP. En esta práctica se enviará una redirección temporal: el navegador recibirá la nueva dirección y solicitará `despues.html`. Para que exista una página de destino, créala:
