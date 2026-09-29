@@ -87,13 +87,11 @@ Cambiar el puerto HTTP de `80` a `8000` y el puerto HTTPS de `443` a `8443`.
    <VirtualHost *:8000>
    ```
 
-4. Edita `/etc/apache2/sites-available/default-ssl.conf` y cambia:
+4. Edita `/etc/apache2/sites-available/default-ssl.conf` y cambia **solo el puerto**, del 443 pon **8443**:
 
    ```apache
-      # Aplica este bloque solo si el módulo SSL está cargado.
-   <IfModule mod_ssl.c>
-         # Define el sitio virtual HTTPS en el puerto 8443.
-       <VirtualHost *:8443>
+   # Define el sitio virtual HTTPS en el puerto 8443.
+   <VirtualHost *:8443>
    ```
 
 5. Activa SSL y el sitio HTTPS:
@@ -139,7 +137,7 @@ Envía una captura de pantalla de la ejecución del último bloque de órdenes d
 
 ## Práctica 2. Cambiar el directorio por defecto y mostrar su contenido
 
-**Referencia del manual:** [3.5, Cómo modificar el directorio por defecto de Apache para Debian](https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-modificar-el-directorio-por-defecto-de-apache).
+**Referencia del manual:** [3.5 Cómo modificar el directorio por defecto de Apache para Debian](https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-modificar-el-directorio-por-defecto-de-apache).
 
 ### Objetivo de la práctica 2
 
@@ -167,7 +165,7 @@ En esta práctica vamos a cambiar el directorio por defecto que tiene los ficher
 2. Edita `/etc/apache2/sites-available/000-default.conf`:
 
    ```apache
-      # Define el sitio virtual HTTP que atiende en el puerto 80.
+   # Define el sitio virtual HTTP que atiende en el puerto 80.
    <VirtualHost *:80>
         # Indica el contacto administrativo del sitio.
       ServerAdmin webmaster@localhost
@@ -221,7 +219,7 @@ Envía una captura donde aparezca tu navegador web visualizando los dos ficheros
 
 ## Práctica 3. Habilitar y deshabilitar un módulo de Apache
 
-**Referencia del manual:** [3.6, Cómo habilitar/deshabilitar un módulo de Apache](https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-habilitardeshabilitar-un-m%C3%B3dulo-de-apache).
+**Referencia del manual:** [3.6 Cómo habilitar/deshabilitar un módulo de Apache](https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-habilitardeshabilitar-un-m%C3%B3dulo-de-apache).
 
 ### Objetivo de la práctica 3
 
@@ -233,7 +231,7 @@ Habilitar `mod_rewrite` y configurar una regla para que las peticiones a `antes.
 
    ```bash
    # Busca en los módulos cargados si aparece mod_rewrite.
-   apache2ctl -M | grep rewrite
+   sudo apache2ctl -M | grep rewrite
    ```
 
 2. Habilítalo y reinicia Apache:
