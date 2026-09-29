@@ -61,7 +61,6 @@ Cambiar el puerto HTTP de `80` a `8000` y el puerto HTTPS de `443` a `8443`.
 ### Pasos de la práctica 1
 
 1. Comprueba que Apache está instalado y funcionando:
-
    ```bash
    # Actualiza el índice local de paquetes disponibles.
    sudo apt update
@@ -72,30 +71,25 @@ Cambiar el puerto HTTP de `80` a `8000` y el puerto HTTPS de `443` a `8443`.
    ```
 
 2. Edita `/etc/apache2/ports.conf`. Cambia la directiva HTTP:
-
    ```apache
    # Hace que Apache escuche las conexiones HTTP en el puerto 8000.
    Listen 8000
    ```
-
    Mantén el bloque `IfModule` de SSL y cambia dentro de él `Listen 443` por `Listen 8443`. Si también aparece un bloque `IfModule mod_gnutls.c`, asegúrate de que no haya dos directivas `Listen 8443` activas.
 
 3. Edita `/etc/apache2/sites-available/000-default.conf` y cambia la primera línea del sitio:
-
    ```apache
    # Define el sitio virtual HTTP para todas las interfaces en el puerto 8000.
    <VirtualHost *:8000>
    ```
 
 4. Edita `/etc/apache2/sites-available/default-ssl.conf` y cambia **solo el puerto**, del 443 pon **8443**:
-
    ```apache
    # Define el sitio virtual HTTPS en el puerto 8443.
    <VirtualHost *:8443>
    ```
 
 5. Activa SSL y el sitio HTTPS:
-
    ```bash
    # Habilita el módulo SSL de Apache.
    sudo a2enmod ssl
@@ -104,7 +98,6 @@ Cambiar el puerto HTTP de `80` a `8000` y el puerto HTTPS de `443` a `8443`.
    ```
 
 6. Comprueba la configuración y reinicia Apache:
-
    ```bash
    # Comprueba que la configuración de Apache no tenga errores de sintaxis.
    sudo apache2ctl configtest
@@ -113,7 +106,6 @@ Cambiar el puerto HTTP de `80` a `8000` y el puerto HTTPS de `443` a `8443`.
    ```
 
 7. Comprueba los dos puertos desde el servidor:
-
    ```bash
    # Envía una petición HTTP al puerto 8000 y muestra solo las cabeceras.
    curl -I http://127.0.0.1:8000
@@ -134,8 +126,8 @@ Apache responde en `http://<IP_SERVIDOR>:8000` y `https://<IP_SERVIDOR>:8443`. L
 Envía una captura de pantalla de la ejecución del último bloque de órdenes de los pasos de esta práctica para comprobar que realmente has cambiado los puertos y habilitado la seguridad.
 
 !!! warning "¡¡NO TE OLVIDES!!"
-   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
-   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+    **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
+    Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
 
 ---
 
