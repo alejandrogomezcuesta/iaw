@@ -133,6 +133,10 @@ Apache responde en `http://<IP_SERVIDOR>:8000` y `https://<IP_SERVIDOR>:8443`. L
 
 Envía una captura de pantalla de la ejecución del último bloque de órdenes de los pasos de esta práctica para comprobar que realmente has cambiado los puertos y habilitado la seguridad.
 
+!!! warning "¡¡NO TE OLVIDES!!"
+   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
+   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+
 ---
 
 ## Práctica 2. Cambiar el directorio por defecto y mostrar su contenido
@@ -214,6 +218,11 @@ Apache muestra un listado del directorio con `uno.html` y `dos.html`, porque no 
 ### Captura de pantalla de la práctica 2
 
 Envía una captura donde aparezca tu navegador web visualizando los dos ficheros `uno.html` y `dos.html`.
+
+!!! warning "¡¡NO TE OLVIDES!!"
+   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
+   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+
 
 ---
 
@@ -307,6 +316,11 @@ La captura de pantalla será ejecutar la siguiente orden y que se vea que `Locat
    curl -I http://127.0.0.1/antes.html
    ```
 
+!!! warning "¡¡NO TE OLVIDES!!"
+   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
+   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+
+
 ---
 
 ## Práctica 4. Configurar `DirectoryIndex`
@@ -378,6 +392,10 @@ Cuando `index.php` aparece primero, se muestra `Contenido PHP`. Cuando `index.ht
 ### Captura de pantalla de la práctica 4
 
 Deja `index.php` primero en la directiva `DirectoryIndex` y envía una captura del navegador al entrar en `http://<IP_SERVIDOR>/práctica4/` sin indicar el nombre de ningún archivo. En la captura debe verse `Contenido PHP`, que confirma que Apache carga `index.php` antes que `index.html`.
+
+!!! warning "¡¡NO TE OLVIDES!!"
+   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
+   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
 
 ---
 
@@ -489,6 +507,9 @@ Envía el resultado de la ejecución de estas órdenes:
    # Solicita la portada del segundo dominio virtual.
    curl http://web2.com/
    ```
+!!! warning "¡¡NO TE OLVIDES!!"
+   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
+   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
 
 ---
 
@@ -583,6 +604,10 @@ Envía el resultado de la ejecución de estas órdenes:
    curl http://127.0.0.1:8001/
    ```
 
+!!! warning "¡¡NO TE OLVIDES!!"
+   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
+   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+
 ---
 
 ## Práctica 7. Consultar los hosts virtuales activos
@@ -630,6 +655,10 @@ Incluye la salida de `apache2ctl -S`. Piensa  por qué un sitio disponible pero 
    Práctica 7
    Un sitio disponible pero no habilitado no recibe peticiones porque...
    ```
+
+!!! warning "¡¡NO TE OLVIDES!!"
+   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
+   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
 
 ---
 
@@ -703,6 +732,11 @@ La captura de pantalla corresponde al resultado de la ejecución de las órdenes
    # Recarga Apache solo después de obtener Syntax OK.
    sudo systemctl reload apache2
    ```
+
+!!! warning "¡¡NO TE OLVIDES!!"
+   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
+   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+
 ---
 
 ## Práctica 9. Ocultar la versión de Apache
@@ -758,6 +792,10 @@ Captura de pantalla de las últimas órdenes ejecutadas:
    # Muestra el intercambio detallado y filtra la cabecera Server.
    curl -Iv http://127.0.0.1/ 2>&1 | grep -i server
    ```
+!!! warning "¡¡NO TE OLVIDES!!"
+   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
+   Si no haces eso, la práctica siguiente entrará en conflicto con la configuració hecha en esta práctica.
+
 
 ---
 
@@ -845,5 +883,8 @@ No mantengas `LogLevel debug` en un servidor de producción: genera mucho volume
 ### Captura de pantalla de la práctica 10
 
 Envía una captura de pantalla donde se vean los logs con el nivel `LogLevel debug`.
+
+!!! warning "¡¡NO TE OLVIDES!!"
+   **Recuerda volver a la instancia original de la máquina virtual de Debian donde no había ninguna configuración hecha.**
 
 ---
