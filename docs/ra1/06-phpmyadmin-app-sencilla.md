@@ -15,9 +15,7 @@ Desplegar en una instancia EC2 de AWS una pila LAMP con **MariaDB** y utilizarla
 
 ## 2. Instalar y comprobar phpMyAdmin
 
-Consulta el documento original: [Instalar phpMyAdmin con `apt`, en la documentación de la pila LAMP](https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#otras-herramientas-relacionadas-con-la-pila-lamp).
-
-Aquí tienes un resumen de los 4 pasos del enlace anterior que son los que tienes que seguir.
+Instala phpMyAdmin directamente desde los repositorios de Ubuntu. No es necesario consultar ninguna guía externa.
 
 1. Instala phpMyAdmin y los módulos PHP que necesita:
 
@@ -33,28 +31,262 @@ En las preguntas del instalador, utiliza MariaDB como gestor de bases de datos. 
 
 ## 3. Desplegar la aplicación web
 
-La aplicación y sus ficheros están en el [repositorio iaw-practica-lamp](https://github.com/josejuansanchez/iaw-practica-lamp). Descárgalo en la instancia y localiza sus directorios `src` y `db`. Automatiza estos pasos con un script propio y comprueba que termina correctamente.
+El código de referencia de esta actividad está en el [repositorio original iaw-practica-lamp](https://github.com/josejuansanchez/iaw-practica-lamp). El enlace es solo de consulta: no hace falta abrirlo, clonar el repositorio ni descargar ficheros. Los comandos siguientes crean una aplicación CRUD equivalente directamente en la instancia.
 
-1. **Crea la base de datos y el usuario de la aplicación.** El fichero `db/database.sql` crea la tabla `users`, pero las instrucciones para crear la base de datos están comentadas. Por eso, primero crea una base de datos llamada `lamp_db` y un usuario local con permisos sobre ella. No configures la aplicación para conectarse como `root`. Puedes hacerlo desde la consola de MariaDB:
+### 3.1 Crear la base de datos, el usuario y la tabla
 
-   ```sql
-   CREATE DATABASE lamp_db CHARACTER SET utf8mb4;
-   CREATE USER 'app_user'@'localhost' IDENTIFIED BY 'CAMBIA_ESTA_CONTRASENA';
-   GRANT ALL PRIVILEGES ON lamp_db.* TO 'app_user'@'localhost';
-   EXIT;
-   ```
+Abre la consola de MariaDB:
 
-   Para abrir la consola, ejecuta `sudo mariadb`. Sustituye la contraseña de ejemplo por una propia y utiliza ese mismo valor en `config.php`.
-2. **Importa los datos iniciales.** Desde el directorio raíz del repositorio, ejecuta el fichero SQL sobre la base de datos que acabas de crear:
+```bash
+sudo mariadb
+```
 
-   ```bash
-   sudo mariadb lamp_db < db/database.sql
-   ```
+Ejecuta estas instrucciones. Cambia `CAMBIA_ESTA_CONTRASENA` por una contraseña propia y apúntala para usarla en el fichero de configuración del siguiente paso:
 
-   Después, comprueba en phpMyAdmin que `lamp_db` contiene la tabla `users`.
-3. **Publica los ficheros PHP.** Copia el contenido de `src` al `DocumentRoot` de Apache, normalmente `/var/www/html`. La aplicación debe quedar accesible desde la raíz del sitio y no dentro de un directorio adicional creado al copiar el repositorio completo.
-4. **Configura la conexión.** Edita `config.php` en el directorio publicado y establece el host `localhost`, el nombre `lamp_db` y el usuario y contraseña que creaste. Estos valores tienen que coincidir con la base de datos y el usuario de MariaDB.
-5. **Prueba la aplicación.** Abre `http://IP_PUBLICA/` y verifica que carga sin errores y permite consultar y gestionar registros. Si aparece un error de conexión, revisa primero los valores de `config.php`, los permisos del usuario y que la tabla se haya importado.
+```sql
+CREATE DATABASE lamp_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'app_user'@'localhost' IDENTIFIED BY 'CAMBIA_ESTA_CONTRASENA';
+GRANT SELECT, INSERT, UPDATE, DELETE ON lamp_db.* TO 'app_user'@'localhost';
+EXIT;
+```
+
+Crea la tabla y añade dos registros de ejemplo para que la aplicación muestre datos desde la primera visita:
+
+```bash
+sudo mariadb lamp_db <<'SQL'
+CREATE TABLE users (
+   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   name VARCHAR(100) NOT NULL,
+   age SMALLINT UNSIGNED NOT NULL,
+   email VARCHAR(100) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO users (name, age, email) VALUES
+   ('Ana García', 25, 'ana@example.test'),
+   ('Luis Pérez', 31, 'luis@example.test');
+SQL
+```
+
+En phpMyAdmin, comprueba que aparece la base de datos `lamp_db`, la tabla `users` y los dos registros. La aplicación utilizará `app_user`, no la cuenta `root`.
+
+### 3.2 Crear la configuración de conexión
+
+Guarda las credenciales fuera del directorio público de Apache:
+
+```bash
+sudo tee /var/www/app-config.php >/dev/null <<'PHP'
+<?php
+declare(strict_types=1);
+
+$database = new PDO(
+   'mysql:host=localhost;dbname=lamp_db;charset=utf8mb4',
+   'app_user',
+   'CAMBIA_ESTA_CONTRASENA',
+   [
+      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+      PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+      PDO::ATTR_EMULATE_PREPARES => false,
+   ]
+);
+PHP
+
+sudo chown root:www-data /var/www/app-config.php
+sudo chmod 640 /var/www/app-config.php
+```
+
+Edita el comando y sustituye también en este fichero `CAMBIA_ESTA_CONTRASENA` por la misma contraseña que asignaste al usuario de MariaDB.
+
+### 3.3 Crear la aplicación
+
+Crea un directorio propio para no sobrescribir la página de bienvenida que Apache instala por defecto:
+
+```bash
+sudo install -d -o root -g www-data -m 755 /var/www/html/app
+```
+
+Crea `/var/www/html/app/index.php` con este código. Incluye listado, alta, edición y borrado de usuarios; las operaciones usan consultas preparadas y token CSRF:
+
+```bash
+sudo tee /var/www/html/app/index.php >/dev/null <<'PHP'
+<?php
+declare(strict_types=1);
+
+session_start();
+require '/var/www/app-config.php';
+
+if (!isset($_SESSION['csrf_token'])) {
+   $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+function escape(string|int|null $value): string
+{
+   return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
+function redirect(string $state): never
+{
+   header('Location: /app/?estado=' . rawurlencode($state));
+   exit;
+}
+
+$error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+   $token = $_POST['csrf_token'] ?? '';
+   if (!is_string($token) || !hash_equals($_SESSION['csrf_token'], $token)) {
+      http_response_code(400);
+      exit('La solicitud no es válida. Recarga la página e inténtalo de nuevo.');
+   }
+
+   $action = $_POST['action'] ?? '';
+
+   if ($action === 'delete') {
+      $id = filter_var($_POST['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+      if ($id === false) {
+         $error = 'El identificador no es válido.';
+      } else {
+         $statement = $database->prepare('DELETE FROM users WHERE id = ?');
+         $statement->execute([$id]);
+         redirect('borrado');
+      }
+   } elseif ($action === 'create' || $action === 'update') {
+      $name = trim((string) ($_POST['name'] ?? ''));
+      $age = filter_var($_POST['age'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 150]]);
+      $email = trim((string) ($_POST['email'] ?? ''));
+      $id = filter_var($_POST['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+
+      if ($name === '' || strlen($name) > 100 || $age === false || !filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 100) {
+         $error = 'Revisa el nombre, la edad (0-150) y el correo electrónico.';
+      } elseif ($action === 'update' && $id === false) {
+         $error = 'El identificador no es válido.';
+      } else {
+         try {
+            if ($action === 'create') {
+               $statement = $database->prepare('INSERT INTO users (name, age, email) VALUES (?, ?, ?)');
+               $statement->execute([$name, $age, $email]);
+               redirect('creado');
+            }
+
+            $statement = $database->prepare('UPDATE users SET name = ?, age = ?, email = ? WHERE id = ?');
+            $statement->execute([$name, $age, $email, $id]);
+            redirect('actualizado');
+         } catch (PDOException $exception) {
+            if ($exception->getCode() === '23000') {
+               $error = 'Ya existe un usuario con ese correo electrónico.';
+            } else {
+               throw $exception;
+            }
+         }
+      }
+   }
+}
+
+$editing = null;
+if (isset($_GET['editar'])) {
+   $editId = filter_var($_GET['editar'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+   if ($editId !== false) {
+      $statement = $database->prepare('SELECT id, name, age, email FROM users WHERE id = ?');
+      $statement->execute([$editId]);
+      $editing = $statement->fetch() ?: null;
+   }
+}
+
+$users = $database->query('SELECT id, name, age, email FROM users ORDER BY id')->fetchAll();
+$messages = [
+   'creado' => 'Registro creado.',
+   'actualizado' => 'Registro actualizado.',
+   'borrado' => 'Registro eliminado.',
+];
+$notice = $messages[$_GET['estado'] ?? ''] ?? '';
+?>
+<!doctype html>
+<html lang="es">
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Gestión de usuarios</title>
+   <style>
+      body { max-width: 900px; margin: 2rem auto; padding: 0 1rem; font: 1rem/1.5 sans-serif; color: #20242a; }
+      h1, h2 { line-height: 1.2; }
+      form { margin: 0 0 1rem; }
+      label { display: inline-block; margin: .4rem .7rem .4rem 0; }
+      input { display: block; box-sizing: border-box; width: 100%; padding: .45rem; }
+      button { padding: .45rem .7rem; cursor: pointer; }
+      table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+      th, td { padding: .55rem; border-bottom: 1px solid #c8cdd2; text-align: left; }
+      .actions { display: flex; gap: .5rem; align-items: center; }
+      .actions form { margin: 0; }
+      .notice { color: #176b3a; }
+      .error { color: #a32222; }
+      @media (max-width: 600px) { table { font-size: .9rem; } th, td { padding: .35rem .2rem; } }
+   </style>
+</head>
+<body>
+   <h1>Gestión de usuarios</h1>
+
+   <?php if ($notice !== ''): ?><p class="notice"><?= escape($notice) ?></p><?php endif; ?>
+   <?php if ($error !== ''): ?><p class="error"><?= escape($error) ?></p><?php endif; ?>
+
+   <h2><?= $editing ? 'Editar usuario' : 'Añadir usuario' ?></h2>
+   <form method="post">
+      <input type="hidden" name="csrf_token" value="<?= escape($_SESSION['csrf_token']) ?>">
+      <input type="hidden" name="action" value="<?= $editing ? 'update' : 'create' ?>">
+      <?php if ($editing): ?><input type="hidden" name="id" value="<?= escape($editing['id']) ?>"><?php endif; ?>
+      <label>Nombre
+         <input name="name" maxlength="100" required value="<?= escape($editing['name'] ?? '') ?>">
+      </label>
+      <label>Edad
+         <input name="age" type="number" min="0" max="150" required value="<?= escape($editing['age'] ?? '') ?>">
+      </label>
+      <label>Correo electrónico
+         <input name="email" type="email" maxlength="100" required value="<?= escape($editing['email'] ?? '') ?>">
+      </label>
+      <button type="submit"><?= $editing ? 'Guardar cambios' : 'Añadir usuario' ?></button>
+      <?php if ($editing): ?> <a href="/app/">Cancelar</a><?php endif; ?>
+   </form>
+
+   <h2>Usuarios registrados</h2>
+   <table>
+      <thead><tr><th>Nombre</th><th>Edad</th><th>Correo</th><th>Acciones</th></tr></thead>
+      <tbody>
+      <?php foreach ($users as $user): ?>
+         <tr>
+            <td><?= escape($user['name']) ?></td>
+            <td><?= escape($user['age']) ?></td>
+            <td><?= escape($user['email']) ?></td>
+            <td class="actions">
+               <a href="/app/?editar=<?= escape($user['id']) ?>">Editar</a>
+               <form method="post" onsubmit="return confirm('¿Quieres borrar este registro?')">
+                  <input type="hidden" name="csrf_token" value="<?= escape($_SESSION['csrf_token']) ?>">
+                  <input type="hidden" name="action" value="delete">
+                  <input type="hidden" name="id" value="<?= escape($user['id']) ?>">
+                  <button type="submit">Borrar</button>
+               </form>
+            </td>
+         </tr>
+      <?php endforeach; ?>
+      <?php if (!$users): ?><tr><td colspan="4">Todavía no hay usuarios.</td></tr><?php endif; ?>
+      </tbody>
+   </table>
+</body>
+</html>
+PHP
+
+sudo chown root:www-data /var/www/html/app/index.php
+sudo chmod 644 /var/www/html/app/index.php
+```
+
+### 3.4 Comprobar el despliegue
+
+Comprueba la sintaxis de los dos ficheros PHP y que el usuario de la aplicación puede leer la tabla:
+
+```bash
+sudo php -l /var/www/app-config.php
+sudo php -l /var/www/html/app/index.php
+mariadb -u app_user -p lamp_db -e "SELECT id, name, age, email FROM users;"
+```
+
+Abre `http://IP_PUBLICA/app/`, sustituye `IP_PUBLICA` por la IPv4 pública de la instancia y prueba a añadir, editar y borrar un registro. phpMyAdmin estará disponible en `http://IP_PUBLICA/phpmyadmin`. Si hay un error de conexión, comprueba la contraseña en `/var/www/app-config.php`, que el paquete `php-mysql` esté instalado y que Apache pueda leer ese fichero.
 
 La imagen siguiente es una referencia visual de la aplicación funcionando; no sustituye las capturas que se piden como entregables.
 
