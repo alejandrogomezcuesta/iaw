@@ -61,7 +61,6 @@ Cambiar el puerto HTTP de `80` a `8000` y el puerto HTTPS de `443` a `8443`.
 ### Pasos de la práctica 1
 
 1. Comprueba que Apache está instalado y funcionando:
-
    ```bash
    # Actualiza el índice local de paquetes disponibles.
    sudo apt update
@@ -72,32 +71,25 @@ Cambiar el puerto HTTP de `80` a `8000` y el puerto HTTPS de `443` a `8443`.
    ```
 
 2. Edita `/etc/apache2/ports.conf`. Cambia la directiva HTTP:
-
    ```apache
    # Hace que Apache escuche las conexiones HTTP en el puerto 8000.
    Listen 8000
    ```
-
    Mantén el bloque `IfModule` de SSL y cambia dentro de él `Listen 443` por `Listen 8443`. Si también aparece un bloque `IfModule mod_gnutls.c`, asegúrate de que no haya dos directivas `Listen 8443` activas.
 
 3. Edita `/etc/apache2/sites-available/000-default.conf` y cambia la primera línea del sitio:
-
    ```apache
    # Define el sitio virtual HTTP para todas las interfaces en el puerto 8000.
    <VirtualHost *:8000>
    ```
 
-4. Edita `/etc/apache2/sites-available/default-ssl.conf` y cambia:
-
+4. Edita `/etc/apache2/sites-available/default-ssl.conf` y cambia **solo el puerto**, del 443 pon **8443**:
    ```apache
-      # Aplica este bloque solo si el módulo SSL está cargado.
-   <IfModule mod_ssl.c>
-         # Define el sitio virtual HTTPS en el puerto 8443.
-       <VirtualHost *:8443>
+   # Define el sitio virtual HTTPS en el puerto 8443.
+   <VirtualHost *:8443>
    ```
 
 5. Activa SSL y el sitio HTTPS:
-
    ```bash
    # Habilita el módulo SSL de Apache.
    sudo a2enmod ssl
@@ -106,7 +98,6 @@ Cambiar el puerto HTTP de `80` a `8000` y el puerto HTTPS de `443` a `8443`.
    ```
 
 6. Comprueba la configuración y reinicia Apache:
-
    ```bash
    # Comprueba que la configuración de Apache no tenga errores de sintaxis.
    sudo apache2ctl configtest
@@ -115,7 +106,6 @@ Cambiar el puerto HTTP de `80` a `8000` y el puerto HTTPS de `443` a `8443`.
    ```
 
 7. Comprueba los dos puertos desde el servidor:
-
    ```bash
    # Envía una petición HTTP al puerto 8000 y muestra solo las cabeceras.
    curl -I http://127.0.0.1:8000
@@ -135,11 +125,20 @@ Apache responde en `http://<IP_SERVIDOR>:8000` y `https://<IP_SERVIDOR>:8443`. L
 
 Envía una captura de pantalla de la ejecución del último bloque de órdenes de los pasos de esta práctica para comprobar que realmente has cambiado los puertos y habilitado la seguridad.
 
+!!! warning "¡¡NO TE OLVIDES!!"
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
+
 ---
 
 ## Práctica 2. Cambiar el directorio por defecto y mostrar su contenido
 
-**Referencia del manual:** [3.5, Cómo modificar el directorio por defecto de Apache para Debian](https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-modificar-el-directorio-por-defecto-de-apache).
+**Referencia del manual:** [3.5 Cómo modificar el directorio por defecto de Apache para Debian](https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-modificar-el-directorio-por-defecto-de-apache).
 
 ### Objetivo de la práctica 2
 
@@ -166,8 +165,8 @@ En esta práctica vamos a cambiar el directorio por defecto que tiene los ficher
 
 2. Edita `/etc/apache2/sites-available/000-default.conf`:
 
-   ```apache
-      # Define el sitio virtual HTTP que atiende en el puerto 80.
+   ```apacheconf
+   # Define el sitio virtual HTTP que atiende en el puerto 80.
    <VirtualHost *:80>
         # Indica el contacto administrativo del sitio.
       ServerAdmin webmaster@localhost
@@ -217,11 +216,20 @@ Apache muestra un listado del directorio con `uno.html` y `dos.html`, porque no 
 
 Envía una captura donde aparezca tu navegador web visualizando los dos ficheros `uno.html` y `dos.html`.
 
+!!! warning "¡¡NO TE OLVIDES!!"
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
+
 ---
 
 ## Práctica 3. Habilitar y deshabilitar un módulo de Apache
 
-**Referencia del manual:** [3.6, Cómo habilitar/deshabilitar un módulo de Apache](https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-habilitardeshabilitar-un-m%C3%B3dulo-de-apache).
+**Referencia del manual:** [3.6 Cómo habilitar/deshabilitar un módulo de Apache](https://josejuansanchez.org/iaw/practica-01-01-teoria/index.html#c%C3%B3mo-habilitardeshabilitar-un-m%C3%B3dulo-de-apache).
 
 ### Objetivo de la práctica 3
 
@@ -233,7 +241,7 @@ Habilitar `mod_rewrite` y configurar una regla para que las peticiones a `antes.
 
    ```bash
    # Busca en los módulos cargados si aparece mod_rewrite.
-   apache2ctl -M | grep rewrite
+   sudo apache2ctl -M | grep rewrite
    ```
 
 2. Habilítalo y reinicia Apache:
@@ -244,7 +252,7 @@ Habilitar `mod_rewrite` y configurar una regla para que las peticiones a `antes.
    # Reinicia Apache para cargar el módulo.
    sudo systemctl restart apache2
    # Comprueba que mod_rewrite figura entre los módulos cargados.
-   apache2ctl -M | grep rewrite
+   sudo apache2ctl -M | grep rewrite
    ```
 
    `mod_rewrite` permite que Apache examine y transforme las URL mediante reglas. Según las opciones de cada regla, puede cambiar internamente el recurso solicitado o enviar al navegador una redirección HTTP. En esta práctica se enviará una redirección temporal: el navegador recibirá la nueva dirección y solicitará `despues.html`. Para que exista una página de destino, créala:
@@ -308,6 +316,15 @@ La captura de pantalla será ejecutar la siguiente orden y que se vea que `Locat
    # Solicita /antes.html y muestra la respuesta de redirección sin seguirla.
    curl -I http://127.0.0.1/antes.html
    ```
+
+!!! warning "¡¡NO TE OLVIDES!!"
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -380,6 +397,15 @@ Cuando `index.php` aparece primero, se muestra `Contenido PHP`. Cuando `index.ht
 ### Captura de pantalla de la práctica 4
 
 Deja `index.php` primero en la directiva `DirectoryIndex` y envía una captura del navegador al entrar en `http://<IP_SERVIDOR>/práctica4/` sin indicar el nombre de ningún archivo. En la captura debe verse `Contenido PHP`, que confirma que Apache carga `index.php` antes que `index.html`.
+
+!!! warning "¡¡NO TE OLVIDES!!"
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -491,6 +517,14 @@ Envía el resultado de la ejecución de estas órdenes:
    # Solicita la portada del segundo dominio virtual.
    curl http://web2.com/
    ```
+!!! warning "¡¡NO TE OLVIDES!!"
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -585,6 +619,15 @@ Envía el resultado de la ejecución de estas órdenes:
    curl http://127.0.0.1:8001/
    ```
 
+!!! warning "¡¡NO TE OLVIDES!!"
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
+
 ---
 
 ## Práctica 7. Consultar los hosts virtuales activos
@@ -632,6 +675,15 @@ Incluye la salida de `apache2ctl -S`. Piensa  por qué un sitio disponible pero 
    Práctica 7
    Un sitio disponible pero no habilitado no recibe peticiones porque...
    ```
+
+!!! warning "¡¡NO TE OLVIDES!!"
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -695,7 +747,25 @@ Provocar un error controlado, localizarlo con `configtest` y corregirlo sin deja
 
 Mientras existe el error, `configtest` informa de un error de sintaxis. Tras corregirlo, muestra `Syntax OK`. Un error de sintaxis no debe aplicarse reiniciando el servicio.
 
-###
+### Captura de pantalla de la práctica 8
+
+La captura de pantalla corresponde al resultado de la ejecución de las órdenes del último paso de esta práctica.
+
+   ```bash
+   # Comprueba que el error se ha corregido.
+   sudo apache2ctl configtest
+   # Recarga Apache solo después de obtener Syntax OK.
+   sudo systemctl reload apache2
+   ```
+
+!!! warning "¡¡NO TE OLVIDES!!"
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -752,6 +822,14 @@ Captura de pantalla de las últimas órdenes ejecutadas:
    # Muestra el intercambio detallado y filtra la cabecera Server.
    curl -Iv http://127.0.0.1/ 2>&1 | grep -i server
    ```
+!!! warning "¡¡NO TE OLVIDES!!"
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---
 
@@ -839,5 +917,14 @@ No mantengas `LogLevel debug` en un servidor de producción: genera mucho volume
 ### Captura de pantalla de la práctica 10
 
 Envía una captura de pantalla donde se vean los logs con el nivel `LogLevel debug`.
+
+!!! warning "¡¡NO TE OLVIDES!!"
+    **Recuerda volver a la instancia original.**
+
+    Antes de continuar:
+
+    1. Apaga la máquina virtual.
+    2. Recupera la instancia original.
+    3. Arranca de nuevo Debian.
 
 ---

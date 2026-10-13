@@ -4,7 +4,10 @@
 
 Estas prácticas convierten los ejercicios del documento **Ejercicios con MariaDB** en un recorrido guiado basado en los apartados 4.1 a 4.11 del manual [**LAMP Stack en Ubuntu Server**](https://josejuansanchez.org/iaw/practica-01-01-teoria/).
 
-Trabaja sobre una máquina virtual Ubuntu Server con MariaDB instalado. No es necesario crear una instantánea antes de cada práctica. Si lo necesitas, puedes crear una instantánea de la máquina virtual al terminar todas las prácticas.
+Trabaja sobre una máquina virtual Ubuntu Server con MariaDB instalado.
+
+!!! danger "Estas prácticas no requieren empezar cada una con una instalación limpia"
+    No es necesario crear una instantánea antes de cada práctica. Si lo necesitas, puedes crear una instantánea de la máquina virtual al terminar todas las prácticas.
 
 Todos los comandos se ejecutan en el servidor salvo que se indique **CLIENTE**. Sustituye los valores entre `< >` por los datos de tu entorno. En el manual se utiliza a menudo el nombre MySQL Server, pero las órdenes están adaptadas a MariaDB.
 
