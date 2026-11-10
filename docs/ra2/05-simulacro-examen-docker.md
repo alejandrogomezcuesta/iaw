@@ -135,7 +135,7 @@ Escribe las órdenes para desplegar Nextcloud y MariaDB en una red bridge llamad
 ---
 
 
-### Ejercicio 11. Instalar *mariadb/joomla*
+## Ejercicio 11. Instalar *mariadb/joomla*
 
 La idea es crear una aplicación con dos contenedores.
 
