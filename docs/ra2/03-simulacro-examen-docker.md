@@ -3,9 +3,9 @@
 Escribe las órdenes de Docker necesarias para resolver cada apartado. No es necesario entregar la ejecución de las órdenes. Los ejercicios están basados en los contenidos de las [sesiones 1](https://iesgn.github.io/curso_docker_2021/sesion1/), [2](https://iesgn.github.io/curso_docker_2021/sesion2/), [3](https://iesgn.github.io/curso_docker_2021/sesion3/) y [4](https://iesgn.github.io/curso_docker_2021/sesion4/) del curso.
 
 !!! warning "Descargar iso de alpine linux con docker"
-    Puedes descargar esta *ova* de virtualbox con *alpine linux* que tiene ya instalado docker.
+    Puedes [descargar esta *ova* de virtualbox con *alpine linux*](https://drive.google.com/file/d/1AlfqPiN3CDyAA8GdaZ4c8GumEMoqKJZD/view?usp=sharing) que tiene ya instalado docker.
     Solo hay un usuario que se llama *root* y sin contraseña.
-    Debería tener abiert
+    En las opciones de *Reenvío de puertos* deberían estar ya configurados algunos.
 
 ## Ejercicios para hacer *a mano*
 
