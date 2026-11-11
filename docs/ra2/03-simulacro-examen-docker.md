@@ -2,8 +2,16 @@
 
 Escribe las órdenes de Docker necesarias para resolver cada apartado. No es necesario entregar la ejecución de las órdenes. Los ejercicios están basados en los contenidos de las [sesiones 1](https://iesgn.github.io/curso_docker_2021/sesion1/), [2](https://iesgn.github.io/curso_docker_2021/sesion2/), [3](https://iesgn.github.io/curso_docker_2021/sesion3/) y [4](https://iesgn.github.io/curso_docker_2021/sesion4/) del curso.
 
+!!! warning "Descargar iso de alpine linux con docker"
+    Puedes descargar esta *ova* de virtualbox con *alpine linux* que tiene ya instalado docker.
+    Solo hay un usuario que se llama *root* y sin contraseña.
+    Debería tener abiert
 
-## Ejercicio 1
+## Ejercicios para hacer *a mano*
+
+Estos ejercicios son para hacerlos *a mano*. Puede que tengas que revisar alguna cosa en la documentación.
+
+### Ejercicio 1
 
 Escribe la orden para ejecutar un contenedor docker con estas características:
 
@@ -18,7 +26,7 @@ Escribe la orden para ejecutar un contenedor docker con estas características:
 
 ---
 
-## Ejercicio 2. Contenedor de prueba
+### Ejercicio 2. Contenedor de prueba
 
 1. Crea y ejecuta un contenedor llamado `prueba` a partir de la imagen `hello-world`.
 2. Comprueba que el contenedor ha terminado y consulta los contenedores parados.
@@ -30,7 +38,7 @@ Escribe la orden para ejecutar un contenedor docker con estas características:
 
 ---
 
-## Ejercicio 3. Servidor web e imágenes
+### Ejercicio 3. Servidor web e imágenes
 
 Escribe las órdenes para descargar la imagen `nginx:stable`, comprobar que está disponible localmente y crear un contenedor llamado `web` que:
 
@@ -44,7 +52,7 @@ Escribe las órdenes para descargar la imagen `nginx:stable`, comprobar que est�
 
 ---
 
-## Ejercicio 4. Persistencia con un volumen
+### Ejercicio 4. Persistencia con un volumen
 
 Supón que tienes un fichero `index.html` en el directorio actual. Escribe las órdenes para:
 
@@ -59,7 +67,7 @@ Supón que tienes un fichero `index.html` en el directorio actual. Escribe las �
 
 ---
 
-## Ejercicio 5. Compartir un directorio con bind mount
+### Ejercicio 5. Compartir un directorio con bind mount
 
 Supón que existe en el anfitrión el directorio `/home/alumno/pagina` y que contiene un fichero `index.html`. Escribe las órdenes para crear dos contenedores a partir de `php:7.4-apache`, llamados `web1` y `web2`, que monten ese directorio en `/var/www/html`. El primero debe publicarse en el puerto 8181 del anfitrión y el segundo en el 8282.
 
@@ -69,7 +77,7 @@ Supón que existe en el anfitrión el directorio `/home/alumno/pagina` y que con
 
 ---
 
-## Ejercicio 6. Aplicación conectada a Redis
+### Ejercicio 6. Aplicación conectada a Redis
 
 La aplicación `iesgn/guestbook` utiliza el nombre `redis` para conectarse a una base de datos Redis. Escribe las órdenes para:
 
@@ -84,17 +92,22 @@ La aplicación `iesgn/guestbook` utiliza el nombre `redis` para conectarse a una
 
 ---
 
-## Ejercicio 7. Buscar, descargar e inspeccionar imágenes
+### Ejercicio 7. Compartir datos con un volumen
 
-Escribe las órdenes para buscar imágenes de Apache HTTP Server en Docker Hub, descargar `httpd:2.4`, comprobar que se ha descargado e inspeccionar la imagen. Después crea una etiqueta local llamada `mi-httpd` para esa misma imagen.
+Escribe las órdenes para comprobar que un volumen permite conservar datos aunque se elimine un contenedor:
+
+1. Crea un volumen llamado `datos_compartidos`.
+2. Ejecuta un contenedor llamado `escritor` con la imagen `alpine`, montando el volumen en `/datos`. Dentro del contenedor, crea el fichero `/datos/mensaje.txt` con el texto `Hola, Docker`.
+3. Elimina el contenedor `escritor`.
+4. Ejecuta un segundo contenedor llamado `lector`, montando el mismo volumen en `/datos`, y muestra el contenido de `/datos/mensaje.txt`.
+5. Elimina el contenedor `lector` y el volumen.
 
 ```bash
-
 ```
 
 ---
 
-## Ejercicio 8. Contenedor interactivo
+### Ejercicio 8. Contenedor interactivo
 
 Escribe las órdenes para crear un contenedor interactivo llamado `debian_prueba` a partir de `debian:bookworm`, instalar `nano`, salir del contenedor y volver a iniciarlo de forma interactiva. Finalmente, elimina el contenedor.
 
@@ -104,14 +117,14 @@ Escribe las órdenes para crear un contenedor interactivo llamado `debian_prueba
 
 ---
 
-## Ejercicio 9. Redes bridge y comunicación entre contenedores
+### Ejercicio 9. Comunicación entre contenedores en una red
 
-Escribe las órdenes para crear dos redes bridge:
+Escribe las órdenes para:
 
-1. `red1`, con la red `172.28.0.0/16` y la puerta de enlace `172.28.0.1`.
-2. `red2`, con la configuración de red asignada automáticamente por Docker.
-
-Después, ejecuta dos contenedores Ubuntu llamados `u1` y `u2`, con nombres de host `host1` y `host2`, conectados respectivamente a `red1` y `red2`. Asigna a `u1` la IP `172.28.0.10`. Instala `inetutils-ping` en ambos contenedores, comprueba que inicialmente no se comunican y conecta `u1` también a `red2` para que puedan comunicarse por nombre.
+1. Crear una red llamada `red_prueba`.
+2. Ejecutar dos contenedores llamados `contenedor1` y `contenedor2` a partir de la imagen `busybox`, conectados a esa red y dejándolos en ejecución.
+3. Comprobar desde `contenedor1` que puede comunicarse con `contenedor2` usando su nombre.
+4. Eliminar los contenedores y la red.
 
 ```bash
 
@@ -119,7 +132,7 @@ Después, ejecuta dos contenedores Ubuntu llamados `u1` y `u2`, con nombres de h
 
 ---
 
-## Ejercicio 10. Aplicación Nextcloud con MariaDB
+### Ejercicio 10. Aplicación Nextcloud con MariaDB
 
 Escribe las órdenes para desplegar Nextcloud y MariaDB en una red bridge llamada `red_nextcloud`:
 
@@ -134,8 +147,10 @@ Escribe las órdenes para desplegar Nextcloud y MariaDB en una red bridge llamad
 
 ---
 
+## Ejercicios para hacer con el ordenador
 
-## Ejercicio 11. Instalar *mariadb/joomla*
+
+### Ejercicio 11. Instalar *mariadb/joomla*
 
 La idea es crear una aplicación con dos contenedores.
 
@@ -195,7 +210,7 @@ Tienes que ejecutar este contenedor incluyendo las siguientes opciones, que son 
 8. Añade la variable de entorno `JOOMLA_DB_NAME` con el valor `joomla_db`.
 
 
-## Ejercicio 12. Instalar *mariadb/drupal*
+### Ejercicio 12. Instalar *mariadb/drupal*
 
 La idea es crear una aplicación con dos contenedores.
 
@@ -254,7 +269,7 @@ Tienes que ejecutar este contenedor incluyendo las siguientes opciones, que son 
 
 ---
 
-## Ejercicio 13. Instalar una aplicación *redis/python*
+### Ejercicio 13. Instalar una aplicación *redis/python*
 
 La idea es crear una aplicación con dos contenedores.
 
@@ -353,6 +368,193 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
 ```
 
+## Ejercicios de docker-compose a órdenes docker
+
+### Ejercicio 14. *phpmyadmin/mysql*
+
+Convierte este fichero `docker-compose.yml` en órdenes:
+
+```yml
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: servidor_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: clave_super_segura
+      MYSQL_DATABASE: mi_base_datos
+    networks:
+      - red_bd
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: cliente_pma
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: servidor_mysql
+    networks:
+      - red_bd
+    depends_on:
+      - db
+
+networks:
+  red_bd:
+    driver: bridge
+```
+
+### Ejercicio 15. *wordpress/mysql*
+
+```yml
+version: '3.8'
+
+services:
+  db_wp:
+    image: mysql:5.7
+    container_name: contenedor_mysql_wp
+    environment:
+      MYSQL_ROOT_PASSWORD: secret_root_pass
+      MYSQL_DATABASE: wp_db
+      MYSQL_USER: wp_user
+      MYSQL_PASSWORD: wp_password
+    networks:
+      - red_wordpress
+
+  web_wp:
+    image: wordpress:latest
+    container_name: contenedor_wordpress
+    ports:
+      - "80:80"
+    environment:
+      WORDPRESS_DB_HOST: contenedor_mysql_wp:3306
+      WORDPRESS_DB_USER: wp_user
+      WORDPRESS_DB_PASSWORD: wp_password
+      WORDPRESS_DB_NAME: wp_db
+    networks:
+      - red_wordpress
+    depends_on:
+      - db_wp
+
+networks:
+  red_wordpress:
+    driver: bridge
+```
+
+### Ejercicio 16. *nextcloud/postgresql*
+
+```yml
+version: '3.8'
+
+services:
+  db_nc:
+    image: postgres:15-alpine
+    container_name: postgres_nextcloud
+    environment:
+      POSTGRES_DB: nextcloud_db
+      POSTGRES_USER: nc_user
+      POSTGRES_PASSWORD: nc_password
+    networks:
+      - red_cloud
+
+  app_nc:
+    image: nextcloud:latest
+    container_name: servidor_nextcloud
+    ports:
+      - "8080:80"
+    environment:
+      POSTGRES_HOST: postgres_nextcloud
+      POSTGRES_DB: nextcloud_db
+      POSTGRES_USER: nc_user
+      POSTGRES_PASSWORD: nc_password
+      NEXTCLOUD_ADMIN_USER: admin
+      NEXTCLOUD_ADMIN_PASSWORD: admin_password
+    networks:
+      - red_cloud
+    depends_on:
+      - db_nc
+
+networks:
+  red_cloud:
+    driver: bridge
+```
+
+### Ejercicio 17. *mediawiki/mariadb*
+
+```yml
+version: '3.8'
+
+services:
+  db_wiki:
+    image: mariadb:10.11
+    container_name: mariadb_wiki
+    environment:
+      MARIADB_ROOT_PASSWORD: root_secret_pass
+      MARIADB_DATABASE: wiki_db
+      MARIADB_USER: wiki_user
+      MARIADB_PASSWORD: wiki_password
+    networks:
+      - red_wiki
+
+  web_wiki:
+    image: mediawiki:latest
+    container_name: servidor_mediawiki
+    ports:
+      - "80:80"
+    environment:
+      MEDIAWIKI_DB_HOST: mariadb_wiki
+      MEDIAWIKI_DB_USER: wiki_user
+      MEDIAWIKI_DB_PASSWORD: wiki_password
+      MEDIAWIKI_DB_NAME: wiki_db
+    networks:
+      - red_wiki
+    depends_on:
+      - db_wiki
+
+networks:
+  red_wiki:
+    driver: bridge
+```
+
+### Ejercicio 18. *gitea/mysql*
+
+```yml
+version: '3.8'
+
+services:
+  db_git:
+    image: mysql:8.0
+    container_name: mysql_gitea
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pass_gitea
+      MYSQL_DATABASE: gitea_db
+      MYSQL_USER: gitea_user
+      MYSQL_PASSWORD: gitea_password
+    networks:
+      - red_gitea
+
+  app_git:
+    image: gitea/gitea:latest
+    container_name: servidor_gitea
+    ports:
+      - "3000:3000"
+      - "2222:22"
+    environment:
+      GITEA__database__DB_TYPE: mysql
+      GITEA__database__HOST: mysql_gitea:3306
+      GITEA__database__NAME: gitea_db
+      GITEA__database__USER: gitea_user
+      GITEA__database__PASSWD: gitea_password
+    networks:
+      - red_gitea
+    depends_on:
+      - db_git
+
+networks:
+  red_gitea:
+    driver: bridge
+```
+
 ---
 
 ## Soluciones
@@ -415,11 +617,12 @@ docker network inspect red_guestbook
 ### Solución del ejercicio 7
 
 ```bash
-docker search httpd
-docker pull httpd:2.4
-docker images httpd
-docker image inspect httpd:2.4
-docker image tag httpd:2.4 mi-httpd:latest
+docker volume create datos_compartidos
+docker run --name escritor --mount source=datos_compartidos,target=/datos alpine sh -c "echo 'Hola, Docker' > /datos/mensaje.txt"
+docker rm escritor
+docker run --name lector --mount source=datos_compartidos,target=/datos alpine cat /datos/mensaje.txt
+docker rm lector
+docker volume rm datos_compartidos
 ```
 
 ### Solución del ejercicio 8
@@ -448,20 +651,13 @@ docker rm debian_prueba
 ### Solución del ejercicio 9
 
 ```bash
-docker network create --driver bridge --subnet 172.28.0.0/16 --gateway 172.28.0.1 red1
-docker network create --driver bridge red2
-docker run -dit --name u1 --hostname host1 --network red1 --ip 172.28.0.10 ubuntu:20.04
-docker run -dit --name u2 --hostname host2 --network red2 ubuntu:20.04
-docker exec u1 apt-get update
-docker exec u1 apt-get install -y inetutils-ping
-docker exec u2 apt-get update
-docker exec u2 apt-get install -y inetutils-ping
-docker exec u1 ping -c 3 host2
-docker network connect red2 u1
-docker exec u1 ping -c 3 host2
+docker network create red_prueba
+docker run -dit --name contenedor1 --network red_prueba busybox sleep 3600
+docker run -dit --name contenedor2 --network red_prueba busybox sleep 3600
+docker exec contenedor1 ping -c 3 contenedor2
+docker rm -f contenedor1 contenedor2
+docker network rm red_prueba
 ```
-
-El primer `ping` debe fallar porque los contenedores están en redes distintas. El último debe resolver `host2` y alcanzar el contenedor.
 
 ### Solución del ejercicio 10
 
@@ -499,4 +695,145 @@ Guarda en `app/app.py` el código Python proporcionado en el enunciado y ejecuta
 docker network create python_net
 docker run -d --name redis --network python_net --mount source=redis_data,target=/data --restart=always redis:alpine redis-server --appendonly yes
 docker run -d --name backend --network python_net -p 5000:5000 --mount type=bind,source="$(pwd)/app",target=/app --restart=always -w /app -e REDIS_HOST=redis python:3.11-alpine sh -c "pip install flask redis && python app.py"
+```
+
+### Solución del ejercicio 14
+
+```bash
+# Crear la red personalizada
+docker network create red_bd;
+
+# Desplegar el contenedor de MySQL
+docker run -d \
+  --name servidor_mysql \
+  --network red_bd \
+  -e MYSQL_ROOT_PASSWORD=clave_super_segura \
+  -e MYSQL_DATABASE=mi_base_datos \
+  mysql:8.0;
+
+# Desplegar el contenedor de phpMyAdmin
+docker run -d \
+  --name cliente_pma \
+  --network red_bd \
+  -p 8080:80 \
+  -e PMA_HOST=servidor_mysql \
+  phpmyadmin/phpmyadmin:latest;
+```
+
+Conceptos clave de este ejercicio
+
+1. **Creación previa de redes (`docker network create`)**: Identificar que Docker Compose crea las redes implícitamente, pero en la CLI hay que crearlas antes de usarlas.
+2. **Conexión entre contenedores (`PMA_HOST`)**: Entender que al estar en la misma red, phpMyAdmin encuentra a MySQL usando el valor de `--name` (`servidor_mysql`) como nombre de host DNS.
+3. **Paso de parámetros CLI**: Traducir correctamente las claves del YAML a sus banderas CLI:
+    - `environment`: --> `-e / --env`
+    - `ports`: --> `-p / --publish`
+    - `container_name`: --> `--name`
+    - `networks`: --> `--network`
+
+4. **Orden de ejecución (`depends_on`)**: Notar que primero hay que arrancar la base de datos y luego el cliente web.
+
+### Solución del ejercicio 15
+
+```bash
+# Crear la red dedicada
+docker network create red_wordpress;
+
+# Lanzar el contenedor de MySQL
+docker run -d \
+  --name contenedor_wordpress \
+  --network red_wordpress \
+  -p 80:80 \
+  -e WORDPRESS_DB_HOST=contenedor_mysql_wp:3306 \
+  -e WORDPRESS_DB_USER=wp_user \
+  -e WORDPRESS_DB_PASSWORD=wp_password \
+  -e WORDPRESS_DB_NAME=wp_db \
+  wordpress:latest;
+```
+
+### Solución del ejercicio 16
+
+```bash
+# Crear la red
+docker network create red_cloud;
+
+# Desplegar PostgreSQL
+docker run -d \
+  --name postgres_nextcloud \
+  --network red_cloud \
+  -e POSTGRES_DB=nextcloud_db \
+  -e POSTGRES_USER=nc_user \
+  -e POSTGRES_PASSWORD=nc_password \
+  postgres:15-alpine;
+
+# Desplegar Nextcloud
+docker run -d \
+  --name servidor_nextcloud \
+  --network red_cloud \
+  -p 8080:80 \
+  -e POSTGRES_HOST=postgres_nextcloud \
+  -e POSTGRES_DB=nextcloud_db \
+  -e POSTGRES_USER=nc_user \
+  -e POSTGRES_PASSWORD=nc_password \
+  -e NEXTCLOUD_ADMIN_USER=admin \
+  -e NEXTCLOUD_ADMIN_PASSWORD=admin_password \
+  nextcloud:latest;
+
+```
+
+### Solución del ejercicio 17
+
+```bash
+# Crear la red
+docker network create red_wiki;
+
+# Desplegar MariaDB
+docker run -d \
+  --name mariadb_wiki \
+  --network red_wiki \
+  -e MARIADB_ROOT_PASSWORD=root_secret_pass \
+  -e MARIADB_DATABASE=wiki_db \
+  -e MARIADB_USER=wiki_user \
+  -e MARIADB_PASSWORD=wiki_password \
+  mariadb:10.11;
+
+# Desplegar mediawiki
+docker run -d \
+  --name servidor_mediawiki \
+  --network red_wiki \
+  -p 80:80 \
+  -e MEDIAWIKI_DB_HOST=mariadb_wiki \
+  -e MEDIAWIKI_DB_USER=wiki_user \
+  -e MEDIAWIKI_DB_PASSWORD=wiki_password \
+  -e MEDIAWIKI_DB_NAME=wiki_db \
+  mediawiki:latest;
+```
+
+### Solución del ejercicio 18
+
+```bash
+# Crear la red
+docker network create red_gitea;
+
+# Desplegar mysql
+docker run -d \
+  --name mysql_gitea \
+  --network red_gitea \
+  -e MYSQL_ROOT_PASSWORD=root_pass_gitea \
+  -e MYSQL_DATABASE=gitea_db \
+  -e MYSQL_USER=gitea_user \
+  -e MYSQL_PASSWORD=gitea_password \
+  mysql:8.0;
+
+# Desplegar Gitea con dos puertos expuestos
+docker run -d \
+  --name servidor_gitea \
+  --network red_gitea \
+  -p 3000:3000 \
+  -p 2222:22 \
+  -e GITEA__database__DB_TYPE=mysql \
+  -e GITEA__database__HOST=mysql_gitea:3306 \
+  -e GITEA__database__NAME=gitea_db \
+  -e GITEA__database__USER=gitea_user \
+  -e GITEA__database__PASSWD=gitea_password \
+  gitea/gitea:latest;
 ```
