@@ -7,7 +7,7 @@ Vamos a seguir la sesión 1 del curso que está aquí: <https://iesgn.github.io/
 !!! warning "Los ejercicios del curso no"
     No vamos a hacer la sección *Ejercicio* que está en el curso. Vamos a hacer el siguiente que es una versión modificada de aquel.
 
-Tenemos que hacer los pasos indicados aquí: https://iesgn.github.io/curso_docker_2021/sesion1/web.html modificando un poco los pasos.
+Tenemos que hacer los pasos indicados aquí: <https://iesgn.github.io/curso_docker_2021/sesion1/web.html> modificando un poco los pasos.
 
 Voy a pedir una serie de capturas de pantalla, que corresponden con los diferentes pasos. Por favor, sube los ficheros de las capturas de pantalla con los nombres que se piden.
 

@@ -1,1 +1,0 @@
-# Preparación del entorno de desarrollo

@@ -1,4 +1,4 @@
-# 🧪 Práctica: Despliegue de Apache en Docker con HTTPS mediante Apache como proxy inverso en AWS
+# Proxy inverso con apache
 
 ## 🎯 Objetivos
 - Desplegar un servidor web en una instancia EC2 de AWS usando Docker.

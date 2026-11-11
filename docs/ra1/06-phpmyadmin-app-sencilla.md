@@ -290,7 +290,7 @@ Abre `http://IP_PUBLICA/app/`, sustituye `IP_PUBLICA` por la IPv4 pública de la
 
 La imagen siguiente es una referencia visual de la aplicación funcionando; no sustituye las capturas que se piden como entregables.
 
-![Ejemplo de la aplicación funcionando](image1.png)
+![Ejemplo de la aplicación funcionando](image-1.png)
 
 ## Entregables
 

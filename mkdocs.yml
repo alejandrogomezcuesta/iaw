@@ -74,4 +74,22 @@ extra:
 extra_javascript:
   - https://unpkg.com/mermaid@11/dist/mermaid.esm.min.mjs
 
-# MkDocs genera automáticamente la navegación a partir de docs/ al omitir nav:.
+
+# ---------------------------
+
+nav:
+  - Presentación de la asignatura: index.md
+  - "RA 1 — Preparación del entorno de desarrollo":
+      - "1 Apuntes: Acceso SSH con claves RSA en Debian": ra1/01-ssh-con-claves.md
+      - "2 Práctica: Instalación de un Servidor Web LAMP en Debian": ra1/02-instalar-lamp-debian.md
+      - "3 Resumen de Apache": ra1/03-resumen-apache.md
+      - "4 Prácticas guiadas de Apache": ra1/04-practicas-apache.md
+      - "5 Prácticas guiadas de MariaDB": ra1/05-practicas-mariadb.md
+      - "6 Práctica: phpMyAdmin y aplicación web sencilla": ra1/06-phpmyadmin-app-sencilla.md
+  - "RA 2 — Instalación de gestores de contenidos":
+      - "1 Curso de docker": ra2/00-curso-docker.md
+      - "2 Docker: Apache y Mariadb": ra2/01-docker-apache-y-mariadb.md
+      - "3 Proxy inverso con apache": ra2/02-proxy-inverso-apache.md
+      - "4 Simulacro de examen de docker": ra2/03-simulacro-examen-docker.md
+  - "AWS - Guías":
+      - "Ampliar el almacenamiento de una instancia de AWS": aws/ampliar-almacenamiento.md
