@@ -94,7 +94,7 @@ nav:
       - "3 Proxy inverso con apache": ra2/02-proxy-inverso-apache.md
       - "4 Simulacro de examen de docker": ra2/03-simulacro-examen-docker.md
   - "RA 3 - Administración de gestores de contenidos":
-      - "1 Proyecto": ra3/01-proyecto.md
+      - "1 Proyecto": ra3/01-practica-cms.md
 
   - "AWS - Guías":
       - "Ampliar el almacenamiento de una instancia de AWS": aws/ampliar-almacenamiento.md
