@@ -4,14 +4,14 @@
 El objetivo de esta actividad es desplegar un Gestor de Contenidos (CMS) de software libre mediante contenedores **Docker** y explorar de forma práctica sus capacidades de administración, personalización, seguridad y distribución de la información en un entorno controlado.
 
 ## 2. Organización, dinámica y planificación (4 sesiones)
-- **Agrupamiento:** El trabajo se realizará en **parejas** (grupos de 2 alumnos/as).
-- **Asignación de herramientas:** Para optimizar el tiempo disponible, el profesor asignará de forma **aleatoria** a cada pareja uno de los **4 gestores de contenidos principales** detallados en el apartado 4 (**WordPress, Drupal, Moodle o MediaWiki**).
+- **Agrupamiento:** El trabajo se realizará de forma individual.
+- **Asignación de herramientas:** Para optimizar el tiempo disponible, el alumno elige uno de los **4 gestores de contenidos principales** detallados en el apartado 4 (**WordPress, Drupal, Moodle o MediaWiki**).
 - **Despliegue:** La instalación del CMS deberá realizarse obligatoriamente mediante **Docker** utilizando un archivo `docker-compose.yml` documentado con persistencia en carpetas locales (*bind mounts*).
 - **Temporalización prevista (4 días / sesiones):**
   - **Sesión 1:** Sorteo de CMS, creación del `docker-compose.yml` con volúmenes locales y despliegue inicial del entorno.
   - **Sesión 2:** Configuración de usuarios, roles, control de accesos, módulos y personalización de temas/plantillas (Puntos 1 al 4).
   - **Sesión 3:** Copias de seguridad, sindicación RSS, SEO, importación/exportación y empaquetado final del entorno (Puntos 5 al 8).
-  - **Sesión 4:** Si hubiera tiempo disponible, exposiciones prácticas ante la clase (**máximo 7-10 minutos por pareja**) de algunos puntos (no todos, porque es inviable) de cada CMS. Entrega en Classroom de los trabajos.
+  - **Sesión 4:** Si hubiera tiempo disponible, exposiciones prácticas ante la clase (**máximo 7-10 minutos**) de algunos puntos (no todos, porque es inviable) de cada CMS. Entrega en Classroom de los trabajos.
 
 ---
 
@@ -31,7 +31,7 @@ Deberéis entregar una memoria técnica (en formato PDF) acompañando vuestro en
 
 ## 4. Gestores de Contenidos (CMS) asignables
 
-El profesor sorteará entre las parejas uno de los siguientes **4 sistemas de referencia** (todos gratuitos, de código abierto y con soporte oficial en Docker):
+Las alumnas y alumnos podéis elegir uno de los siguientes **4 sistemas de referencia** (todos gratuitos, de código abierto y con soporte oficial en Docker):
 
 1. **WordPress** (`wordpress`)
    - *Enfoque:* Webs corporativas y blogs. Es el estándar del mercado; destaca por su facilidad de uso, su editor de bloques y su inmenso ecosistema de plugins y temas.
@@ -103,5 +103,3 @@ La entrega se realizará al finalizar la **4ª sesión** a través de **Google C
 2. **Entorno Docker completo comprimido (`xxx_docker.zip`):** Un único archivo comprimido que contenga la carpeta raíz de vuestro despliegue con:
    - El archivo `docker-compose.yml` funcional y comentado.
    - Todas las carpetas asociadas a los volúmenes (*bind mounts*) generadas durante la práctica tras haber detenido los contenedores con `docker compose down`.
-
-> **Importante:** Solo tiene que realizar la entrega en Classroom **una persona de la pareja**. Quien no realice la entrega deberá marcar la tarea como completada indicando en un comentario privado quién es su compañero/a de grupo.
