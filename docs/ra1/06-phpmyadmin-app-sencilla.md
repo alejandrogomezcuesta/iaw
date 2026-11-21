@@ -294,5 +294,7 @@ La imagen siguiente es una referencia visual de la aplicación funcionando; no s
 
 ## Entregables
 
-- Una captura de pantalla donde se vea phpMyAdmin funcionando.
-- Una captura de pantalla donde se vea la aplicación funcionando.
+Entre en Classroom dos ficheros que se llamen de la siguiente manera:
+
+- Fichero **`phpmyadmin.jpg`**: una captura de pantalla donde se vea phpMyAdmin funcionando.
+- Fichero **`aplicacion.jpg`**: una captura de pantalla donde se vea la aplicación funcionando.
