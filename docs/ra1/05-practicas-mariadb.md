@@ -447,10 +447,4 @@ No elimines ningún fichero de configuración ni ningún dato de MariaDB como pa
 
 ## Entrega final
 
-Crea un fichero Markdown con una sección para cada práctica. En cada sección incluye:
-
-- comandos ejecutados;
-- ficheros de configuración o scripts creados y modificados;
-- capturas o salidas que demuestren el resultado;
-- errores encontrados y su solución;
-- forma de restaurar el estado inicial.
+Entrega las 4 capturas de pantalla, una por cada práctica que se pide en esta página.
