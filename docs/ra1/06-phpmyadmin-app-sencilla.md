@@ -298,3 +298,5 @@ Entre en Classroom dos ficheros que se llamen de la siguiente manera:
 
 - Fichero **`phpmyadmin.jpg`**: una captura de pantalla donde se vea phpMyAdmin funcionando.
 - Fichero **`aplicacion.jpg`**: una captura de pantalla donde se vea la aplicación funcionando.
+
+**En las capturas de pantalla recoge la URL del navegador también** para que pueda comprobar que te has conectado realmente desde el navegador.
