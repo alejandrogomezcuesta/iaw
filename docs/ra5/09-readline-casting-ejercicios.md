@@ -13,7 +13,7 @@ php ejercicio1.php
 
 Los programas utilizan `readline()` para pedir datos. Las respuestas llegan
 como texto; conviértelas a `(int)` o `(float)` según corresponda. Puedes
-consultar [Entrada de datos y conversión de tipos en PHP](08-input-casting-teoria.md)
+consultar [Entrada de datos y conversión de tipos en PHP](08-readline-casting-teoria.md)
 y los apuntes de [condiciones en PHP](06-condiciones-teoria.md).
 
 ## Ejercicio 1: Área de un rectángulo (con mucha ayuda)
