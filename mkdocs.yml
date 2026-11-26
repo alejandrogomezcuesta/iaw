@@ -79,6 +79,16 @@ extra_javascript:
 
 nav:
   - Presentación de la asignatura: index.md
+  - "RA 5 - Programación PHP":
+      - "1 Entorno PHP": ra5/01-entorno-php.md
+      - "2 Ejercicios: Literales, tipos y expresiones": ra5/02-literales-tipos-expresiones-ejercicios.md
+      - "3 Teoría: Literales, tipos y expresiones": ra5/03-literales-tipos-expresiones-teoria.md
+      - "4 Teoría: Variables y expresiones": ra5/04-variables-expresiones-teoria.md
+      - "5 Ejercicios: Variables y expresiones": ra5/05-variables-expresiones-ejercicios.md
+      - "6 Teoría: Condiciones": ra5/06-condiciones-teoria.md
+      - "7 Ejercicios: Condiciones": ra5/07-condiciones-ejercicios.md
+      - "8 Teoría: Entrada y casting": ra5/08-readline-casting-teoria.md
+      - "9 Ejercicios: Entrada y casting": ra5/09-readline-casting-ejercicios.md
   - "RA 1 — Preparación del entorno de desarrollo":
       - "Contenidos": ra1/index.md
       - "1 Apuntes: Acceso SSH con claves RSA en Debian": ra1/01-ssh-con-claves.md
@@ -93,8 +103,9 @@ nav:
       - "2 Docker: Apache y Mariadb": ra2/01-docker-apache-y-mariadb.md
       - "3 Proxy inverso con apache": ra2/02-proxy-inverso-apache.md
       - "4 Simulacro de examen de docker": ra2/03-simulacro-examen-docker.md
-  - "RA 3 - Administración de gestores de contenidos":
-      - "1 Proyecto": ra3/01-practica-cms.md
+  - "RA 4 - Ofimática web":
+      - "1 Ofimática web": ra4/01-suites-ofimaticas-docker.md
+
 
   - "AWS - Guías":
       - "Ampliar el almacenamiento de una instancia de AWS": aws/ampliar-almacenamiento.md
